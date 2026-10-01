@@ -25,7 +25,7 @@ for i in range(3):
     dc("up", "-d")
     while True:
         try:
-            if urllib.request.urlopen(f"http://localhost:{PORT}/healthz", timeout=2).status == 200:
+            if urllib.request.urlopen(f"http://127.0.0.1:{PORT}/healthz", timeout=2).status == 200:
                 break
         except Exception:
             time.sleep(0.05)

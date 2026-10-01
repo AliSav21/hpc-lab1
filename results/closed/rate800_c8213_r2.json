@@ -1,0 +1,22 @@
+{
+  "mode": "closed",
+  "client": "asyncio",
+  "base": "http://127.0.0.1:18080",
+  "path": "/donor-registry/{id}",
+  "concurrency": 8213,
+  "warmup_s": 10,
+  "duration_s": 30,
+  "procs": 4,
+  "requests_in_window": 32306,
+  "achieved_rps": 265.43333333333334,
+  "p50_ms": 1313.0000000819564,
+  "p95_ms": 9766.000000061467,
+  "p99_ms": 24094.00000004098,
+  "mean_ms": 3301.0157555890028,
+  "non2xx_share": 0.7535132792670092,
+  "L_mean": 8212.999466666664,
+  "L_max": 8213,
+  "instances": {
+    "": 7963
+  }
+}

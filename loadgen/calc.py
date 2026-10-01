@@ -35,7 +35,12 @@ def main():
     for p in sorted((RESULTS / "closed").glob("*.json")):
         s = json.loads(p.read_text())
         closed.setdefault(s["concurrency"], []).append(s)
-    for conc, runs in closed.items():
+    out.append("Кількість одночасних запитів у закритому контурі дорівнює середньому L, виміряному"
+               " у відкритому контурі на тому самому рівні.\n")
+    out.append("| Рівень (відкритий контур) | Контур | Одночасних запитів | Досягнуто, rps |"
+               " p95, мс | Не-2xx, % |")
+    out.append("|---|---|---|---|---|---|")
+    for conc, runs in sorted(closed.items()):
         rate = None
         for q in (RESULTS / "closed").glob(f"rate*_c{conc}_r1.json"):
             rate = int(q.name.split("_")[0].removeprefix("rate"))
@@ -44,9 +49,10 @@ def main():
             continue
         cx = statistics.median(r["achieved_rps"] for r in runs)
         cp = statistics.median(r["p95_ms"] for r in runs)
-        out.append("| контур | одночасних запитів | досягнуто, rps | p95, мс |\n|---|---|---|---|")
-        out.append(f"| відкритий (задано {rate}) | L ≈ {o['L_mean']:.0f} | {o['achieved_rps']:.1f} | {o['p95_ms']:.1f} |")
-        out.append(f"| закритий | {conc} | {cx:.1f} | {cp:.1f} |")
+        ce = statistics.median(r["non2xx_share"] for r in runs)
+        out.append(f"| {rate} rps | відкритий | L ≈ {o['L_mean']:.0f} | {o['achieved_rps']:.1f} |"
+                   f" {o['p95_ms']:.1f} | {o['non2xx_share'] * 100:.2f} |")
+        out.append(f"| {rate} rps | закритий | {conc} | {cx:.1f} | {cp:.1f} | {ce * 100:.2f} |")
 
     text = "\n".join(out) + "\n"
     (RESULTS / "calculations.md").write_text(text, encoding="utf-8")

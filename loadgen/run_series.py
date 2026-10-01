@@ -32,7 +32,7 @@ def env_port():
     return "8080"
 
 
-BASE = f"http://localhost:{env_port()}"
+BASE = f"http://127.0.0.1:{env_port()}"
 
 
 def compose(*args, replicas=None, capture=False):

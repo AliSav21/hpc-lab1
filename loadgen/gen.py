@@ -4,6 +4,7 @@
 import sys as _sys
 _sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows за замовчуванням cp1252
 import argparse
+import asyncio
 import gzip
 import http.client
 import json
@@ -117,6 +118,75 @@ def closed_worker(a):
     return records
 
 
+# --- закритий контур на великій кількості одночасних запитів ------------------
+# Коли N у тисячах, потоки не підходять (стек і перемикання контексту), тому
+# кожен «віртуальний користувач» це корутина asyncio з власним keep-alive зʼєднанням.
+CRLF = chr(13) + chr(10)
+CRLFB = CRLF.encode()
+
+
+async def _au_read(reader):
+    """Читає одну відповідь HTTP/1.1 (Content-Length), повертає код статусу."""
+    status = int((await reader.readuntil(CRLFB)).split(b" ")[1])
+    clen = 0
+    while True:
+        h = await reader.readuntil(CRLFB)
+        if h == CRLFB:
+            break
+        k, _, v = h.partition(b":")
+        if k.lower() == b"content-length":
+            clen = int(v.strip())
+    if clen:
+        await reader.readexactly(clen)
+    return status
+
+
+async def _au_user(host, port, path_t, ids, seed, t0, end_rel, records, timeout):
+    """Один віртуальний користувач: наступний запит лише після відповіді на попередній."""
+    rng = random.Random(seed)
+    loop = asyncio.get_running_loop()
+    reader = writer = None
+    while True:
+        t_rel = loop.time() - t0
+        if t_rel < 0:
+            await asyncio.sleep(-t_rel)
+            continue
+        if t_rel >= end_rel:
+            break
+        path = path_t.format(id=rng.choice(ids)) if ids else path_t
+        try:
+            if writer is None:
+                reader, writer = await asyncio.wait_for(asyncio.open_connection(host, port), timeout)
+            writer.write(f"GET {path} HTTP/1.1{CRLF}Host: {host}{CRLF}{CRLF}".encode())
+            await writer.drain()
+            status = await asyncio.wait_for(_au_read(reader), timeout)
+        except Exception:
+            status = 0
+            if writer is not None:
+                writer.close()
+                writer = None
+        records.append((0, t_rel, loop.time() - t0 - t_rel, status, ""))
+    if writer is not None:
+        writer.close()
+
+
+def closed_worker_async(a):
+    base_url, path_t, ids, conc, warmup, duration, start, seed, timeout = a
+    host, port = _target(base_url)
+    records = []
+
+    async def main():
+        t0 = asyncio.get_running_loop().time() + (start - time.time())
+        await asyncio.gather(*[
+            _au_user(host, port, path_t, ids, seed * 100000 + i, t0, warmup + duration,
+                     records, timeout)
+            for i in range(conc)
+        ])
+
+    asyncio.run(main())
+    return records
+
+
 def pct(sorted_vals, p):
     if not sorted_vals:
         return None
@@ -186,14 +256,24 @@ def run_open(base, path, ids, rate, warmup, duration, procs=None, threads=64, ou
     return summary
 
 
-def run_closed(base, path, ids, concurrency, warmup, duration, procs=None, out=None):
+def run_closed(base, path, ids, concurrency, warmup, duration, procs=None, out=None,
+               use_async=None, timeout=90.0):
+    # до кількох сотень користувачів вистачає потоків, далі asyncio
+    use_async = (concurrency > 500) if use_async is None else use_async
     procs = min(procs or default_procs(), concurrency)
     start = time.time() + START_DELAY + 0.3 * procs
     shares = [concurrency // procs + (1 if k < concurrency % procs else 0) for k in range(procs)]
-    args = [(base, path, ids, shares[k], warmup, duration, start, 2000 + k) for k in range(procs)]
+    if use_async:
+        worker = closed_worker_async
+        args = [(base, path, ids, shares[k], warmup, duration, start, 2000 + k, timeout)
+                for k in range(procs)]
+    else:
+        worker = closed_worker
+        args = [(base, path, ids, shares[k], warmup, duration, start, 2000 + k) for k in range(procs)]
     with mp.get_context("spawn").Pool(procs) as pool:
-        records = [r for part in pool.map(closed_worker, args) for r in part]
-    summary = {"mode": "closed", "base": base, "path": path, "concurrency": concurrency,
+        records = [r for part in pool.map(worker, args) for r in part]
+    summary = {"mode": "closed", "client": "asyncio" if use_async else "threads",
+               "base": base, "path": path, "concurrency": concurrency,
                "warmup_s": warmup, "duration_s": duration, "procs": procs,
                **summarize(records, warmup, duration)}
     if out:
@@ -208,7 +288,7 @@ def load_ids(path):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
-    ap.add_argument("--base", default="http://localhost:8080")
+    ap.add_argument("--base", default="http://127.0.0.1:8080")
     ap.add_argument("--path", default="/donor-registry/{id}")
     ap.add_argument("--ids", default=str(Path(__file__).with_name("ids.json")))
     ap.add_argument("--rate", type=float, help="запитів/с (відкритий контур)")

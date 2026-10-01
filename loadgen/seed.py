@@ -51,7 +51,7 @@ def ensure_ids(base, n=100):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default="http://localhost:8080")
+    ap.add_argument("--base", default="http://127.0.0.1:8080")
     ap.add_argument("--n", type=int, default=100)
     a = ap.parse_args()
     print(f"{len(ensure_ids(a.base, a.n))} ids -> {IDS_FILE}")

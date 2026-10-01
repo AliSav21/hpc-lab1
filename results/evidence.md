@@ -4,11 +4,11 @@
 `docker compose ps --format table {{.Name}}	{{.Status}}	{{.Ports}}`
 
 ```
-NAME           STATUS                       PORTS
-donors-db-1    Up About an hour (healthy)   5432/tcp
-donors-lb-1    Up 7 minutes                 0.0.0.0:8080->80/tcp, [::]:8080->80/tcp
-donors-web-1   Up About an hour (healthy)   8000/tcp
-donors-web-2   Up 7 minutes (healthy)       8000/tcp
+NAME           STATUS                    PORTS
+donors-db-1    Up 31 minutes (healthy)   5432/tcp
+donors-lb-1    Up 4 minutes              0.0.0.0:18080->80/tcp, [::]:18080->80/tcp
+donors-web-1   Up 31 minutes (healthy)   8000/tcp
+donors-web-2   Up 7 seconds (healthy)    8000/tcp
 ```
 
 ## Розмір фінального образу
@@ -90,7 +90,7 @@ NanoCpus=1000000000 Memory=536870912
 ```
 127.0.0.1:5432 (Postgres): підключення немає
 127.0.0.1:8000 (web):      підключення немає
-127.0.0.1:8080 (lb):       доступно
+127.0.0.1:18080 (lb):       доступно
 ```
 
 ## База доступна з контейнера сервісу за іменем db

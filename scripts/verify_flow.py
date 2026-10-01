@@ -16,7 +16,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 PORT = next((l.split("=", 1)[1].strip() for l in (ROOT / ".env").read_text(encoding="utf-8").splitlines()
              if l.startswith("LB_PORT=")), "8080")
-BASE = f"http://localhost:{PORT}"
+BASE = f"http://127.0.0.1:{PORT}"
 LOG = []
 
 

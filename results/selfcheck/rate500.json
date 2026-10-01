@@ -1,0 +1,22 @@
+{
+  "mode": "open",
+  "base": "http://localhost:8080",
+  "path": "/_null",
+  "rate": 500,
+  "warmup_s": 5,
+  "duration_s": 15,
+  "procs": 4,
+  "threads_per_proc": 64,
+  "requests_in_window": 7500,
+  "achieved_rps": 499.73333333333335,
+  "p50_ms": 9.612712877802743,
+  "p95_ms": 17.299768354743875,
+  "p99_ms": 25.443921190425797,
+  "mean_ms": 9.82269962818036,
+  "non2xx_share": 0.0,
+  "L_mean": 4.907594705497073,
+  "L_max": 19,
+  "instances": {
+    "": 7500
+  }
+}

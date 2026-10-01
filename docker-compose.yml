@@ -1,0 +1,73 @@
+name: donors
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set POSTGRES_USER in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # виконується лише на порожньому томі, тобто при першому старті
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+    networks: [backend]
+
+  web:
+    build: .
+    image: donor-registry:latest
+    environment:
+      DB_HOST: db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    expose:
+      - "8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      # без curl і wget: образ їх не містить, перевірка виконується інтерпретатором
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=2)"
+      interval: 2s
+      timeout: 3s
+      retries: 15
+      start_period: 3s
+    deploy:
+      replicas: ${WEB_REPLICAS:-1}
+      resources:
+        limits:
+          cpus: "1"
+          memory: 512M
+    networks: [backend]
+
+  lb:
+    image: nginx:1.27-alpine
+    ports:
+      - "${LB_PORT:-8080}:80"
+    volumes:
+      - ./lb/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      web:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-size: "50m"
+        max-file: "3"
+    networks: [backend]
+
+networks:
+  backend:
+
+volumes:
+  pgdata:

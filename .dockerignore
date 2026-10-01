@@ -1,0 +1,16 @@
+.git
+.gitignore
+.idea
+.venv
+**/__pycache__
+*.pyc
+.env
+.env.*
+results
+loadgen
+scripts
+lb
+db
+docker-compose.yml
+Dockerfile
+*.md

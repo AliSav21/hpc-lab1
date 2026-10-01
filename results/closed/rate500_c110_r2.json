@@ -1,0 +1,21 @@
+{
+  "mode": "closed",
+  "base": "http://localhost:8080",
+  "path": "/donor-registry/{id}",
+  "concurrency": 110,
+  "warmup_s": 10,
+  "duration_s": 30,
+  "procs": 4,
+  "requests_in_window": 18022,
+  "achieved_rps": 600.7333333333333,
+  "p50_ms": 153.24215008877218,
+  "p95_ms": 371.56482994323596,
+  "p99_ms": 618.2516378955922,
+  "mean_ms": 182.9035018979667,
+  "non2xx_share": 0.0,
+  "L_mean": 109.99937296685918,
+  "L_max": 110,
+  "instances": {
+    "d62d98504dcc": 18022
+  }
+}

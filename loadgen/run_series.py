@@ -1,5 +1,4 @@
-"""Оркестрація вимірювань
-"""
+"""Оркестрація вимірювань: піднімає стенд і проганяє серії. Команди див. HOWTO.md."""
 import sys as _sys
 _sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows: cp1252
 import argparse

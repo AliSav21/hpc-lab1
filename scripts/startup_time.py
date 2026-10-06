@@ -1,6 +1,6 @@
 """Час від `docker compose up` до першого 200 на /healthz: образи зібрані, томи порожні, 3 повтори."""
 import sys as _sys
-_sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows за замовчуванням cp1252
+_sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows: cp1252
 import json
 import statistics
 import subprocess

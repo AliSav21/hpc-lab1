@@ -1,8 +1,6 @@
-"""Генератор навантаження: відкритий контур (фіксована інтенсивність) і закритий (фіксована кількість
-одночасних запитів). Лише стандартна бібліотека.
-"""
+"""Генератор навантаження: відкритий і закритий контур. Лише стандартна бібліотека."""
 import sys as _sys
-_sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows за замовчуванням cp1252
+_sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows: cp1252
 import argparse
 import asyncio
 import gzip
@@ -19,14 +17,14 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 TIMEOUT = 5.0   # таймаут одного запиту, с
-DRAIN = 15.0    # скільки чекати завершення після кінця прогону, с
+DRAIN = 15.0    # дочікування після прогону, с
 START_DELAY = 3.0
 
 _local = threading.local()
 
 
 def http_get(host, port, path):
-    """GET через keep-alive зʼєднання потоку. Повертає (status, X-Instance); status 0 — помилка."""
+    """GET по keep-alive. Повертає (status, X-Instance); 0 — помилка."""
     for attempt in (0, 1):
         conn = getattr(_local, "conn", None)
         reused = conn is not None
@@ -40,7 +38,7 @@ def http_get(host, port, path):
         except Exception:
             conn.close()
             _local.conn = None
-            if not (reused and attempt == 0):  # одна повторна спроба, якщо впало старе зʼєднання
+            if not (reused and attempt == 0):  # повтор, якщо впало старе зʼєднання
                 return 0, ""
     return 0, ""
 
@@ -57,7 +55,7 @@ def open_worker(a):
     total = warmup + duration
     step = procs / rate                       # інтервал між запитами одного процесу
     n = int(rate * total / procs)
-    t0 = time.perf_counter() + (start - time.time())  # perf_counter-момент початку прогону
+    t0 = time.perf_counter() + (start - time.time())  # початок прогону в perf_counter
     records = []                              # (i, t_rel, latency, status, instance)
 
     def task(i, t_rel, path):
@@ -86,9 +84,9 @@ def open_worker(a):
     done = list(records)
     seen = {r[0] for r in done}
     for i, (t_rel, _) in enumerate(futs):
-        if i not in seen:  # не встигло за DRAIN: рахується як невдале
+        if i not in seen:  # не встигло за DRAIN
             done.append((i, t_rel, deadline - t0 - t_rel, -1, ""))
-    for i in range(len(futs), n):  # планувальник не встиг навіть відправити (дуже пізно)
+    for i in range(len(futs), n):  # не відправлено взагалі
         done.append((i, k / rate + i * step, deadline - t0 - (k / rate + i * step), -1, ""))
     return done
 
@@ -118,15 +116,13 @@ def closed_worker(a):
     return records
 
 
-# --- закритий контур на великій кількості одночасних запитів ------------------
-# Коли N у тисячах, потоки не підходять (стек і перемикання контексту), тому
-# кожен «віртуальний користувач» це корутина asyncio з власним keep-alive зʼєднанням.
+# Закритий контур на тисячах користувачів: потоки не тягнуть, тому корутини asyncio.
 CRLF = chr(13) + chr(10)
 CRLFB = CRLF.encode()
 
 
 async def _au_read(reader):
-    """Читає одну відповідь HTTP/1.1 (Content-Length), повертає код статусу."""
+    """Читає відповідь HTTP/1.1, повертає код статусу."""
     status = int((await reader.readuntil(CRLFB)).split(b" ")[1])
     clen = 0
     while True:
@@ -142,7 +138,7 @@ async def _au_read(reader):
 
 
 async def _au_user(host, port, path_t, ids, seed, t0, end_rel, records, timeout):
-    """Один віртуальний користувач: наступний запит лише після відповіді на попередній."""
+    """Віртуальний користувач: наступний запит після відповіді на попередній."""
     rng = random.Random(seed)
     loop = asyncio.get_running_loop()
     reader = writer = None
@@ -202,7 +198,7 @@ def summarize(records, warmup, duration):
     lats = sorted(r[2] * 1000 for r in win)
     completed = sum(1 for r in records if r[3] > 0 and w0 <= r[1] + r[2] < w1)
     non2xx = sum(1 for r in win if not 200 <= r[3] < 300)
-    # L: середня кількість запитів у системі за вікно = інтеграл перекриття інтервалів / тривалість
+    # L: інтеграл перекриття інтервалів / тривалість вікна
     area = 0.0
     events = []
     for _, t, lat, *_ in records:
@@ -258,7 +254,7 @@ def run_open(base, path, ids, rate, warmup, duration, procs=None, threads=64, ou
 
 def run_closed(base, path, ids, concurrency, warmup, duration, procs=None, out=None,
                use_async=None, timeout=90.0):
-    # до кількох сотень користувачів вистачає потоків, далі asyncio
+    # до сотень користувачів потоки, далі asyncio
     use_async = (concurrency > 500) if use_async is None else use_async
     procs = min(procs or default_procs(), concurrency)
     start = time.time() + START_DELAY + 0.3 * procs
@@ -287,7 +283,7 @@ def load_ids(path):
 
 
 def default_base():
-    """Адреса стенду з .env (LB_PORT); явний 127.0.0.1, щоб не було неоднозначності IPv4/IPv6."""
+    """Адреса стенду з .env; 127.0.0.1 замість localhost через IPv4/IPv6."""
     env = Path(__file__).resolve().parent.parent / ".env"
     port = "18080"
     if env.exists():

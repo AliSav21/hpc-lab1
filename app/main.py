@@ -33,7 +33,7 @@ pool = AsyncConnectionPool(
 async def lifespan(_: FastAPI):
     await pool.open()
     try:
-        await pool.wait(timeout=60)  # база може ще стартувати; /healthz тим часом віддає 503
+        await pool.wait(timeout=60)  # поки база стартує, /healthz віддає 503
     except PoolTimeout:
         pass
     yield

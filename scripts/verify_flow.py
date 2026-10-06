@@ -4,7 +4,7 @@
     python scripts/verify_flow.py lifecycle  # + перевірка down/up і down -v/up
 """
 import sys as _sys
-_sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows за замовчуванням cp1252
+_sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows: cp1252
 import json
 import subprocess
 import sys

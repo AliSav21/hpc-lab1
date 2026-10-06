@@ -1,7 +1,7 @@
 """Оркестрація вимірювань
 """
 import sys as _sys
-_sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows за замовчуванням cp1252
+_sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows: cp1252
 import argparse
 import json
 import os
@@ -56,13 +56,13 @@ def wait_health(timeout=120):
 
 def bring_up(instances):
     compose("up", "-d", replicas=instances)
-    compose("restart", "lb")  # nginx резолвить web лише на старті: після зміни реплік перезапуск
+    compose("restart", "lb")  # nginx резолвить web лише на старті
     wait_health()
     time.sleep(2)
 
 
 class StatsSampler:
-    """Пише `docker stats` кожні ~2 с у CSV, поки триває прогін (щоб бачити CPU під навантаженням)."""
+    """Пише docker stats у CSV, поки триває прогін."""
 
     def __init__(self, path):
         self.path, self.stop = Path(path), threading.Event()
@@ -91,7 +91,7 @@ class StatsSampler:
 
 
 def cmd_selfcheck(a):
-    """Генератор проти ендпоінта, який нічого не робить: якщо тут не дотягує, межа в генераторі."""
+    """Генератор проти порожнього ендпоінта: показує межу самого генератора."""
     bring_up(1)
     for rate in a.rates:
         s = gen.run_open(BASE, "/_null", [], rate, 5, 15, out=RESULTS / "selfcheck" / f"rate{rate}")

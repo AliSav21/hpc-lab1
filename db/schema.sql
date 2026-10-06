@@ -1,5 +1,4 @@
--- Реєстр донорів (варіант 20). Накочується автоматично при першому старті бази
--- (змонтовано в /docker-entrypoint-initdb.d), тому всі інструкції ідемпотентні.
+-- Реєстр донорів (варіант 20). Накочується автоматично при першому старті бази.
 
 CREATE TABLE IF NOT EXISTS donor_registry (
     id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -12,6 +11,6 @@ CREATE TABLE IF NOT EXISTS donor_registry (
     available     BOOLEAN  NOT NULL
 );
 
--- Фільтр у переліку + стабільний порядок для пагінації: WHERE available = $1 ORDER BY id LIMIT/OFFSET
+-- Під фільтр і порядок у переліку: WHERE available = $1 ORDER BY id
 CREATE INDEX IF NOT EXISTS idx_donor_registry_available_id
     ON donor_registry (available, id);

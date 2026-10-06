@@ -1,6 +1,6 @@
 """Заносить N записів у реєстр через API і зберігає їх ідентифікатори в loadgen/ids.json."""
 import sys as _sys
-_sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows за замовчуванням cp1252
+_sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows: cp1252
 import argparse
 import http.client
 import json
@@ -37,7 +37,7 @@ def fake_donor(i, tag):
 
 
 def ensure_ids(base, n=100):
-    """Гарантує щонайменше n записів, повертає їхні ідентифікатори й пише loadgen/ids.json."""
+    """Гарантує n записів, повертає їхні id, пише loadgen/ids.json."""
     _, page = call(base, "GET", f"/donor-registry?limit={n}")
     ids = [x["id"] for x in page["items"]]
     tag = uuid.uuid4().hex[:6]
@@ -50,7 +50,7 @@ def ensure_ids(base, n=100):
 
 
 def default_base():
-    """Адреса стенду з .env (LB_PORT); явний 127.0.0.1, щоб не було неоднозначності IPv4/IPv6."""
+    """Адреса стенду з .env; 127.0.0.1 замість localhost через IPv4/IPv6."""
     env = Path(__file__).resolve().parent.parent / ".env"
     port = "18080"
     if env.exists():

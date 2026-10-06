@@ -146,14 +146,14 @@ WEB_REPLICAS=2 docker compose up -d      # одна команда
 ```dockerfile
 # syntax=docker/dockerfile:1
 
-# ---- builder: тут ставляться залежності, у фінал іде лише готовий venv ----
+# builder: залежності у venv
 FROM python:3.12-slim AS builder
 ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
 RUN python -m venv /opt/venv
 COPY requirements.txt .
 RUN /opt/venv/bin/pip install -r requirements.txt
 
-# ---- final: без компіляторів, pip-кешу і curl/wget ----
+# final: без компіляторів, pip-кешу, curl і wget
 FROM python:3.12-slim
 ENV PATH=/opt/venv/bin:$PATH PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
 RUN useradd --system --uid 10001 --no-create-home app
@@ -200,7 +200,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
     volumes:
       - pgdata:/var/lib/postgresql/data
-      # виконується лише на порожньому томі, тобто при першому старті
+      # виконується лише на порожньому томі
       - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
@@ -223,7 +223,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      # без curl і wget: образ їх не містить, перевірка виконується інтерпретатором
+      # без curl і wget: перевіряє інтерпретатор
       test:
         - CMD
         - python
@@ -274,13 +274,12 @@ events {
 }
 
 http {
-    # $upstream_addr показує, на який інстанс пішов запит
+    # $upstream_addr: на який інстанс пішов запит
     log_format lb '$time_iso8601 "$request" $status upstream=$upstream_addr '
                   'urt=$upstream_response_time rt=$request_time';
     access_log /dev/stdout lb;
 
-    # web резолвиться під час старту у всі IP реплік (DNS Compose), далі round-robin.
-    # Після зміни кількості реплік lb треба перезапустити (див. README).
+    # web резолвиться на старті, далі round-robin; після зміни реплік потрібен restart lb
     upstream web {
         server web:8000;
         keepalive 64;
@@ -289,7 +288,7 @@ http {
     server {
         listen 80;
 
-        # ендпоінт, який нічого не робить: для перевірки самого генератора навантаження
+        # порожній ендпоінт для перевірки генератора
         location = /_null {
             access_log off;
             default_type text/plain;
@@ -541,17 +540,17 @@ X = 642 це 171 мс. Саме тому генератор із фіксова�
 ### створення
 `POST /donor-registry`
 ```json
-{"donor_code": "D-1790868490", "birth_year": 1996, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
+{"donor_code": "D-1791312486", "birth_year": 1996, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
 ```
 → **201**
 ```json
-{"id":1,"donor_code":"D-1790868490","birth_year":1996,"blood_group":"O+","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":true}
+{"id":103,"donor_code":"D-1791312486","birth_year":1996,"blood_group":"O+","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":true}
 ```
 
 ### 400: вік 10 років
 `POST /donor-registry`
 ```json
-{"donor_code": "D-1790868490", "birth_year": 2016, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
+{"donor_code": "D-1791312487", "birth_year": 2016, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
 ```
 → **400**
 ```json
@@ -561,7 +560,7 @@ X = 642 це 171 мс. Саме тому генератор із фіксова�
 ### 400: вік 70 років
 `POST /donor-registry`
 ```json
-{"donor_code": "D-1790868490", "birth_year": 1956, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
+{"donor_code": "D-1791312487", "birth_year": 1956, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
 ```
 → **400**
 ```json
@@ -571,7 +570,7 @@ X = 642 це 171 мс. Саме тому генератор із фіксова�
 ### 400: невалідна група крові
 `POST /donor-registry`
 ```json
-{"donor_code": "D-1790868490", "birth_year": 1996, "blood_group": "X", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
+{"donor_code": "D-1791312487", "birth_year": 1996, "blood_group": "X", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
 ```
 → **400**
 ```json
@@ -581,7 +580,7 @@ X = 642 це 171 мс. Саме тому генератор із фіксова�
 ### 409: дубль donor_code
 `POST /donor-registry`
 ```json
-{"donor_code": "D-1790868490", "birth_year": 1996, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
+{"donor_code": "D-1791312486", "birth_year": 1996, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
 ```
 → **409**
 ```json
@@ -592,14 +591,14 @@ X = 642 це 171 мс. Саме тому генератор із фіксова�
 `GET /donor-registry?limit=5`
 → **200**
 ```json
-{"items":[{"id":1,"donor_code":"D-1790868490","birth_year":1996,"blood_group":"O+","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":true}],"total":1,"limit":5,"offset":0}
+{"items":[{"id":3,"donor_code":"SEED-d6880f-0000","birth_year":1971,"blood_group":"B-","hla_typing":["A*02:01","B*07:02","DRB1*15:01"],"registered_on":"2026-08-17","available":false},{"id":4,"donor_code":"SEED-d6880f-0001","birth_year":1975,"blood_group":"O+","hla_typing":["A*02:01","B*07:02","DRB1*15:01"],"registered_on":"2025-04-11","available":true},{"id":5,"donor_code":"SEED-d6880f-0002","birth_year":1992,"blood_group":"A-","hla_typing":["A*02:01","B*07:02","DRB1*15:01"],"registered_on":"2024-04-21","available":true},{"id":6,"donor_code":"SEED-d6880f-0003","birth_year":2005,"blood_group":"AB-","hla_typing":["A*02:01","B*07:02","DRB1*15:01"],"registered_on":"2025-04-12","available":true},{"id":7,"donor_code":"SEED-d6880f-0004","birth_year":1989,"blood_group":"A-","hla_typing":["A*02:01","B*07:02","DRB1*15:01"],"registered_on":"2024-02-07","available":false}],"total":101,"limit":5,"offset":0}
 ```
 
 ### перелік з фільтром available=false
 `GET /donor-registry?available=false&limit=5`
 → **200**
 ```json
-{"items":[],"total":0,"limit":5,"offset":0}
+{"items":[{"id":3,"donor_code":"SEED-d6880f-0000","birth_year":1971,"blood_group":"B-","hla_typing":["A*02:01","B*07:02","DRB1*15:01"],"registered_on":"2026-08-17","available":false},{"id":7,"donor_code":"SEED-d6880f-0004","birth_year":1989,"blood_group":"A-","hla_typing":["A*02:01","B*07:02","DRB1*15:01"],"registered_on":"2024-02-07","available":false},{"id":8,"donor_code":"SEED-d6880f-0005","birth_year":1990,"blood_group":"O+","hla_typing":["A*02:01","B*07:02","DRB1*15:01"],"registered_on":"2024-06-12","available":false},{"id":9,"donor_code":"SEED-d6880f-0006","birth_year":2001,"blood_group":"AB+","hla_typing":["A*02:01","B*07:02","DRB1*15:01"],"registered_on":"2026-01-13","available":false},{"id":10,"donor_code":"SEED-d6880f-0007","birth_year":1975,"blood_group":"O+","hla_typing":["A*02:01","B*07:02","DRB1*15:01"],"registered_on":"2025-11-14","available":false}],"total":30,"limit":5,"offset":0}
 ```
 
 ### 400: limit понад максимум
@@ -610,26 +609,26 @@ X = 642 це 171 мс. Саме тому генератор із фіксова�
 ```
 
 ### за ідентифікатором
-`GET /donor-registry/1`
+`GET /donor-registry/103`
 → **200**
 ```json
-{"id":1,"donor_code":"D-1790868490","birth_year":1996,"blood_group":"O+","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":true}
+{"id":103,"donor_code":"D-1791312486","birth_year":1996,"blood_group":"O+","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":true}
 ```
 
 ### повна заміна
-`PUT /donor-registry/1`
+`PUT /donor-registry/103`
 ```json
-{"donor_code": "D-1790868490", "birth_year": 1996, "blood_group": "AB-", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": false}
+{"donor_code": "D-1791312486", "birth_year": 1996, "blood_group": "AB-", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": false}
 ```
 → **200**
 ```json
-{"id":1,"donor_code":"D-1790868490","birth_year":1996,"blood_group":"AB-","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":false}
+{"id":103,"donor_code":"D-1791312486","birth_year":1996,"blood_group":"AB-","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":false}
 ```
 
 ### 400: PUT з невалідним віком
-`PUT /donor-registry/1`
+`PUT /donor-registry/103`
 ```json
-{"donor_code": "D-1790868490", "birth_year": 1900, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
+{"donor_code": "D-1791312487", "birth_year": 1900, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
 ```
 → **400**
 ```json
@@ -639,7 +638,7 @@ X = 642 це 171 мс. Саме тому генератор із фіксова�
 ### 404: PUT неіснуючого
 `PUT /donor-registry/999999999`
 ```json
-{"donor_code": "D-1790868490", "birth_year": 1996, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
+{"donor_code": "D-1791312487", "birth_year": 1996, "blood_group": "O+", "hla_typing": ["A*02:01", "B*07:02"], "registered_on": "2026-01-15", "available": true}
 ```
 → **404**
 ```json
@@ -647,21 +646,21 @@ X = 642 це 171 мс. Саме тому генератор із фіксова�
 ```
 
 ### видалення
-`DELETE /donor-registry/1`
+`DELETE /donor-registry/103`
 → **204**
 ```json
 (порожнє тіло)
 ```
 
 ### повторне видалення → 404
-`DELETE /donor-registry/1`
+`DELETE /donor-registry/103`
 → **404**
 ```json
 {"errors":[{"field":"id","message":"donor not found"}]}
 ```
 
 ### GET видаленого → 404
-`GET /donor-registry/1`
+`GET /donor-registry/103`
 → **404**
 ```json
 {"errors":[{"field":"id","message":"donor not found"}]}
@@ -674,14 +673,14 @@ X = 642 це 171 мс. Саме тому генератор із фіксова�
 ```
 → **201**
 ```json
-{"id":3,"donor_code":"PERSIST-1","birth_year":1996,"blood_group":"O+","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":true}
+{"id":105,"donor_code":"PERSIST-1","birth_year":1996,"blood_group":"O+","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":true}
 ```
 
 ### після down + up запис на місці (очікуємо 200)
-`GET /donor-registry/3`
+`GET /donor-registry/105`
 → **200**
 ```json
-{"id":3,"donor_code":"PERSIST-1","birth_year":1996,"blood_group":"O+","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":true}
+{"id":105,"donor_code":"PERSIST-1","birth_year":1996,"blood_group":"O+","hla_typing":["A*02:01","B*07:02"],"registered_on":"2026-01-15","available":true}
 ```
 
 ### після down -v + up база порожня (total = 0)
@@ -702,10 +701,10 @@ Healthcheck у `docker-compose.yml` виконує інтерпретатор Py
 
 ```
 NAME           STATUS                    PORTS
-donors-db-1    Up 31 minutes (healthy)   5432/tcp
-donors-lb-1    Up 4 minutes              0.0.0.0:18080->80/tcp, [::]:18080->80/tcp
-donors-web-1   Up 31 minutes (healthy)   8000/tcp
-donors-web-2   Up 7 seconds (healthy)    8000/tcp
+donors-db-1    Up 27 seconds (healthy)   5432/tcp
+donors-lb-1    Up 1 second               0.0.0.0:18080->80/tcp, [::]:18080->80/tcp
+donors-web-1   Up 24 seconds (healthy)   8000/tcp
+donors-web-2   Up 9 seconds (healthy)    8000/tcp
 ```
 
 ### Розмір фінального образу

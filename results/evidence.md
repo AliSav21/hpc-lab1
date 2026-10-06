@@ -5,10 +5,10 @@
 
 ```
 NAME           STATUS                    PORTS
-donors-db-1    Up 31 minutes (healthy)   5432/tcp
-donors-lb-1    Up 4 minutes              0.0.0.0:18080->80/tcp, [::]:18080->80/tcp
-donors-web-1   Up 31 minutes (healthy)   8000/tcp
-donors-web-2   Up 7 seconds (healthy)    8000/tcp
+donors-db-1    Up 27 seconds (healthy)   5432/tcp
+donors-lb-1    Up 1 second               0.0.0.0:18080->80/tcp, [::]:18080->80/tcp
+donors-web-1   Up 24 seconds (healthy)   8000/tcp
+donors-web-2   Up 9 seconds (healthy)    8000/tcp
 ```
 
 ## Розмір фінального образу

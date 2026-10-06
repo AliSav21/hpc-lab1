@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:?set POSTGRES_DB in .env}
     volumes:
       - pgdata:/var/lib/postgresql/data
-      # виконується лише на порожньому томі, тобто при першому старті
+      # виконується лише на порожньому томі
       - ./db/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
@@ -32,7 +32,7 @@ services:
       db:
         condition: service_healthy
     healthcheck:
-      # без curl і wget: образ їх не містить, перевірка виконується інтерпретатором
+      # без curl і wget: перевіряє інтерпретатор
       test:
         - CMD
         - python

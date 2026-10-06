@@ -1,13 +1,13 @@
 # syntax=docker/dockerfile:1
 
-# ---- builder: тут ставляться залежності, у фінал іде лише готовий venv ----
+# builder: залежності у venv
 FROM python:3.12-slim AS builder
 ENV PIP_NO_CACHE_DIR=1 PIP_DISABLE_PIP_VERSION_CHECK=1
 RUN python -m venv /opt/venv
 COPY requirements.txt .
 RUN /opt/venv/bin/pip install -r requirements.txt
 
-# ---- final: без компіляторів, pip-кешу і curl/wget ----
+# final: без компіляторів, pip-кешу, curl і wget
 FROM python:3.12-slim
 ENV PATH=/opt/venv/bin:$PATH PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1
 RUN useradd --system --uid 10001 --no-create-home app

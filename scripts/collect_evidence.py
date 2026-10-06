@@ -19,7 +19,7 @@ OUT = []
 def sh(title, cmd, note=""):
     r = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, encoding="utf-8", errors="replace")
     text = (r.stdout + r.stderr).strip() or "(порожній вивід)"
-    text = text.replace(PASSWORD, "***")  # пароль у звіт не потрапляє
+    text = text.replace(PASSWORD, "***")  # пароль не потрапляє у звіт
     OUT.append(f"## {title}\n`{' '.join(cmd)}`\n" + (f"\n{note}\n" if note else "") + f"\n```\n{text}\n```\n")
 
 
@@ -44,7 +44,7 @@ sh("Healthcheck сервісу (команда і стан)", ["docker", "inspec
 sh("Обмеження ресурсів web", ["docker", "inspect", w, "--format",
                               "NanoCpus={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}}"])
 
-# Пароль не в образі, не в історії, не в репозиторії
+# пароль не в образі, історії, репозиторії
 hist = subprocess.run(["docker", "image", "history", "donor-registry:latest", "--no-trunc"],
                       capture_output=True, text=True, encoding="utf-8", errors="replace").stdout
 tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split()
@@ -58,7 +58,7 @@ OUT.append("## Пароль не в образі, не в історії збі�
            f"у файлах репозиторію (git ls-files): {found_in or 'не знайдено'}\n```\n")
 sh(".env не комітиться", ["git", "check-ignore", "-v", ".env"])
 
-# База не публікується на хост
+# база не публікується на хост
 def reachable(port):
     s = socket.socket()
     s.settimeout(2)

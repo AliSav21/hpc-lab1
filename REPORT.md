@@ -135,6 +135,11 @@ docker compose start db           -> /healthz знову 200
 
 Сервіс не тримає стану в пам'яті процесу (пул з'єднань стану даних не містить), усе зберігається в базі.
 
+Сервіс публікує схему OpenAPI: інтерактивна сторінка з усіма шістьма ендпоінтами доступна за
+`/docs`, машиночитна схема — за `/openapi.json`. Корінь `/` перенаправляє на `/docs`. Моделі відповідей
+навмисно не оголошені через `response_model`, щоб не додавати перевірку кожної відповіді на шлях,
+яким знімались вимірювання.
+
 ## 3. Етапи 2-4. Реалізація, образ, стенд
 
 - **Сервіс** (`app/main.py`): FastAPI, `psycopg_pool.AsyncConnectionPool`. Помилки валідації pydantic перетворюються
@@ -341,7 +346,7 @@ LB_PORT=18080
 ## 4. Розмір образу і час до першої відповіді `/healthz`
 
 - **Розмір образу.** `docker image inspect donor-registry:latest --format '{{.Size}}'` повертає
-  **65 604 397 байт (приблизно 65,6 МБ)**. Docker Desktop зі сховищем containerd повертає тут розмір стисненого
+  **65 625 557 байт (приблизно 65,6 МБ)**. Docker Desktop зі сховищем containerd повертає тут розмір стисненого
   вмісту. Сума розмірів шарів у `docker image history` (87,6 + 4,95 + 41,4 + 79,8 МБ) дає **приблизно 214 МБ**
   у розпакованому вигляді. Обидва значення наведено свідомо, щоб було видно, яка саме метрика використана.
 - **Час від `docker compose up` до першого 200 на `/healthz`** (образи зібрані, томи порожні, `down -v` перед кожним
@@ -721,17 +726,16 @@ Healthcheck у `docker-compose.yml` виконує інтерпретатор Py
 
 ```
 NAME           STATUS                    PORTS
-donors-db-1    Up 27 seconds (healthy)   5432/tcp
-donors-lb-1    Up 1 second               0.0.0.0:18080->80/tcp, [::]:18080->80/tcp
-donors-web-1   Up 24 seconds (healthy)   8000/tcp
-donors-web-2   Up 9 seconds (healthy)    8000/tcp
+donors-db-1    Up 2 hours (healthy)      5432/tcp
+donors-lb-1    Up 2 hours                0.0.0.0:18080->80/tcp, [::]:18080->80/tcp
+donors-web-2   Up 44 seconds (healthy)   8000/tcp
 ```
 
 ### Розмір фінального образу
 `docker image inspect donor-registry:latest --format {{.Size}} байт`
 
 ```
-65604397 байт
+65625557 байт
 ```
 
 ### Шари образу
@@ -743,30 +747,30 @@ donors-web-2   Up 9 seconds (healthy)    8000/tcp
 0B	USER 10001
 20.5kB	COPY app ./app # buildkit
 4.1kB	WORKDIR /srv
-79.8MB	COPY /opt/venv /opt/venv # buildkit
+79.9MB	COPY /opt/venv /opt/venv # buildkit
 41kB	RUN /bin/sh -c useradd --system --uid 10001 …
 0B	ENV PATH=/opt/venv/bin:/usr/local/bin:/usr/l…
 0B	CMD ["python3"]
 16.4kB	RUN /bin/sh -c set -eux;  for src in idle3 p…
 41.4MB	RUN /bin/sh -c set -eux;   savedAptMark="$(a…
-0B	ENV PYTHON_SHA256=5c8462af5790baf43a321a1559…
-0B	ENV PYTHON_VERSION=3.12.14
+0B	ENV PYTHON_SHA256=c2c4321961fab0fb999d66e0ce…
+0B	ENV PYTHON_VERSION=3.12.15
 0B	ENV GPG_KEY=7169605F62C751356D054A26A821E680…
-4.95MB	RUN /bin/sh -c set -eux;  apt-get update;  a…
+4.94MB	RUN /bin/sh -c set -eux;  apt-get update;  a…
 0B	ENV LANG=C.UTF-8
 0B	ENV PATH=/usr/local/bin:/usr/local/sbin:/usr…
-87.6MB	# debian.sh --arch 'amd64' out/ 'trixie' '@1…
+87.7MB	# debian.sh --arch 'amd64' out/ 'trixie' '@1…
 ```
 
 ### Процес у контейнері: uid і користувач
-`docker exec donors-web-1 id`
+`docker exec donors-web-2 id`
 
 ```
 uid=10001(app) gid=999(app) groups=999(app)
 ```
 
 ### curl, wget, gcc в образі відсутні (додаткова вимога: healthcheck без curl/wget)
-`docker exec donors-web-1 sh -c for c in curl wget gcc; do command -v $c || echo "$c: немає"; done`
+`docker exec donors-web-2 sh -c for c in curl wget gcc; do command -v $c || echo "$c: немає"; done`
 
 ```
 curl: немає
@@ -775,14 +779,14 @@ gcc: немає
 ```
 
 ### Healthcheck сервісу (команда і стан)
-`docker inspect donors-web-1 --format {{json .Config.Healthcheck.Test}} => {{.State.Health.Status}}`
+`docker inspect donors-web-2 --format {{json .Config.Healthcheck.Test}} => {{.State.Health.Status}}`
 
 ```
 ["CMD","python","-c","import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=2)"] => healthy
 ```
 
 ### Обмеження ресурсів web
-`docker inspect donors-web-1 --format NanoCpus={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}}`
+`docker inspect donors-web-2 --format NanoCpus={{.HostConfig.NanoCpus}} Memory={{.HostConfig.Memory}}`
 
 ```
 NanoCpus=1000000000 Memory=536870912
@@ -810,7 +814,7 @@ NanoCpus=1000000000 Memory=536870912
 ```
 
 ### База доступна з контейнера сервісу за іменем db
-`docker exec donors-web-1 python -c import socket;s=socket.create_connection(('db',5432),2);print('db:5432 підключення є')`
+`docker exec donors-web-2 python -c import socket;s=socket.create_connection(('db',5432),2);print('db:5432 підключення є')`
 
 ```
 db:5432 підключення є
@@ -820,7 +824,6 @@ db:5432 підключення є
 `docker compose ps web --format {{.Name}}`
 
 ```
-donors-web-1
 donors-web-2
 ```
 

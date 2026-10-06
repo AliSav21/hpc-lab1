@@ -6,7 +6,7 @@ from typing import Annotated, Literal
 
 from fastapi import FastAPI, Path, Query, Request
 from fastapi.exceptions import RequestValidationError
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from psycopg import errors
 from psycopg.rows import dict_row
 from psycopg_pool import AsyncConnectionPool, PoolTimeout
@@ -40,7 +40,22 @@ async def lifespan(_: FastAPI):
     await pool.close()
 
 
-app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+app = FastAPI(
+    lifespan=lifespan,
+    title="Реєстр донорів",
+    version="1.0.0",
+    description=(
+        "CRUD-сервіс лабораторної роботи 1, варіант 20.\n\n"
+        "Валідація: рік народження має давати вік від 18 до 55 років. "
+        "Фільтр у переліку — за доступністю. "
+        "`limit` за замовчуванням 20, максимум 100."
+    ),
+)
+
+
+@app.get("/", include_in_schema=False)
+async def root():
+    return RedirectResponse("/docs")
 
 
 class DonorIn(BaseModel):
@@ -88,7 +103,7 @@ async def on_validation_error(_: Request, exc: RequestValidationError):
     return JSONResponse({"errors": errors_out}, status_code=400)
 
 
-@app.get("/healthz")
+@app.get("/healthz", summary="Готовність сервісу: 200, або 503 поки база недоступна")
 async def healthz():
     try:
         async with pool.connection(timeout=2) as conn:
@@ -98,7 +113,7 @@ async def healthz():
     return {"status": "ok"}
 
 
-@app.post("/donor-registry", status_code=201)
+@app.post("/donor-registry", status_code=201, summary="Створити запис")
 async def create(body: DonorIn):
     try:
         async with pool.connection() as conn:
@@ -113,7 +128,7 @@ async def create(body: DonorIn):
         return error(409, "donor_code", "donor_code already exists")
 
 
-@app.get("/donor-registry")
+@app.get("/donor-registry", summary="Перелік із пагінацією і фільтром за доступністю")
 async def list_donors(
     limit: int = Query(DEFAULT_LIMIT, ge=1, le=MAX_LIMIT),
     offset: int = Query(0, ge=0),
@@ -134,7 +149,7 @@ async def list_donors(
 ID = Path(ge=1, le=2**63 - 1)
 
 
-@app.get("/donor-registry/{id}")
+@app.get("/donor-registry/{id}", summary="Один запис за ідентифікатором")
 async def get_one(id: int = ID):
     async with pool.connection() as conn:
         cur = await conn.execute(f"SELECT {COLS} FROM donor_registry WHERE id = %s", [id])
@@ -142,7 +157,7 @@ async def get_one(id: int = ID):
     return row if row else error(404, "id", "donor not found")
 
 
-@app.put("/donor-registry/{id}")
+@app.put("/donor-registry/{id}", summary="Повна заміна запису")
 async def replace(body: DonorIn, id: int = ID):
     try:
         async with pool.connection() as conn:
@@ -159,7 +174,7 @@ async def replace(body: DonorIn, id: int = ID):
     return row if row else error(404, "id", "donor not found")
 
 
-@app.delete("/donor-registry/{id}", status_code=204)
+@app.delete("/donor-registry/{id}", status_code=204, summary="Видалити запис")
 async def delete(id: int = ID):
     async with pool.connection() as conn:
         cur = await conn.execute("DELETE FROM donor_registry WHERE id = %s RETURNING id", [id])

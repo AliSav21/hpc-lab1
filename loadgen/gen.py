@@ -286,9 +286,20 @@ def load_ids(path):
     return json.loads(p.read_text()) if p.exists() else []
 
 
+def default_base():
+    """Адреса стенду з .env (LB_PORT); явний 127.0.0.1, щоб не було неоднозначності IPv4/IPv6."""
+    env = Path(__file__).resolve().parent.parent / ".env"
+    port = "18080"
+    if env.exists():
+        for line in env.read_text(encoding="utf-8").splitlines():
+            if line.startswith("LB_PORT="):
+                port = line.split("=", 1)[1].strip()
+    return "http://127.0.0.1:" + port
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawTextHelpFormatter)
-    ap.add_argument("--base", default="http://127.0.0.1:8080")
+    ap.add_argument("--base", default=default_base())
     ap.add_argument("--path", default="/donor-registry/{id}")
     ap.add_argument("--ids", default=str(Path(__file__).with_name("ids.json")))
     ap.add_argument("--rate", type=float, help="запитів/с (відкритий контур)")

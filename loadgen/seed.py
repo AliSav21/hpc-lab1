@@ -49,9 +49,20 @@ def ensure_ids(base, n=100):
     return ids
 
 
+def default_base():
+    """Адреса стенду з .env (LB_PORT); явний 127.0.0.1, щоб не було неоднозначності IPv4/IPv6."""
+    env = Path(__file__).resolve().parent.parent / ".env"
+    port = "18080"
+    if env.exists():
+        for line in env.read_text(encoding="utf-8").splitlines():
+            if line.startswith("LB_PORT="):
+                port = line.split("=", 1)[1].strip()
+    return "http://127.0.0.1:" + port
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default="http://127.0.0.1:8080")
+    ap.add_argument("--base", default=default_base())
     ap.add_argument("--n", type=int, default=100)
     a = ap.parse_args()
     print(f"{len(ensure_ids(a.base, a.n))} ids -> {IDS_FILE}")

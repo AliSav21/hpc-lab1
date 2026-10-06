@@ -1,7 +1,8 @@
 # Реєстр донорів: CRUD-сервіс (варіант 20)
 
 Ресурс `/donor-registry`, FastAPI + PostgreSQL 16 + nginx, Docker Compose.
-Звіт: [REPORT.md](REPORT.md). Детальна інструкція користування: [HOWTO.md](HOWTO.md).
+Коротка інструкція запуску: [RUN.md](RUN.md). Детальна інструкція користування: [HOWTO.md](HOWTO.md).
+Звіт: [REPORT.md](REPORT.md).
 
 ## Запуск (одна команда)
 

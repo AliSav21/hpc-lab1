@@ -26,8 +26,12 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+      # варіант 19: розмір пулу 10, зʼєднань понад пул немає
+      DB_POOL_SIZE: ${DB_POOL_SIZE:-10}
     expose:
       - "8000"
+    # запас часу на коректну зупинку: uvicorn дочікує запити в обробці
+    stop_grace_period: 30s
     depends_on:
       db:
         condition: service_healthy
@@ -48,6 +52,19 @@ services:
         limits:
           cpus: "1"
           memory: 512M
+    networks: [backend]
+
+  prometheus:
+    image: prom/prometheus:v2.55.1
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=24h
+    ports:
+      - "${PROM_PORT:-19090}:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - promdata:/prometheus
     networks: [backend]
 
   lb:
@@ -71,3 +88,4 @@ networks:
 
 volumes:
   pgdata:
+  promdata:

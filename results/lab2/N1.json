@@ -1,0 +1,1302 @@
+{
+  "label": "N1: 1 екземпляр(и)",
+  "base": "http://127.0.0.1:18080",
+  "path": "/donor-registry/{id}",
+  "procs": 4,
+  "profile": {
+    "warmup_s": 10.0,
+    "warmup_rate": 200.0,
+    "step_s": 20.0,
+    "rate0": 200.0,
+    "rate_step": 200.0,
+    "transient_s": 5.0,
+    "timeout_s": 5.0
+  },
+  "max_rate_G": 2797.0,
+  "stop_reason": "two_low_steps",
+  "steps": [
+    {
+      "step": 0,
+      "target_rps": 200.0,
+      "window_s": [
+        15,
+        30
+      ],
+      "achieved_rps": 199.93333333333334,
+      "achieved_sd": 32.60908433170703,
+      "sent_rps": 200.0,
+      "p50_ms": 19.695556396619907,
+      "p95_ms": 547.6260764631454,
+      "p99_ms": 855.2810117146946,
+      "responses": 2999,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    },
+    {
+      "step": 1,
+      "target_rps": 400.0,
+      "window_s": [
+        35,
+        50
+      ],
+      "achieved_rps": 336.06666666666666,
+      "achieved_sd": 163.78577762547317,
+      "sent_rps": 400.06666666666666,
+      "p50_ms": 646.3204511022197,
+      "p95_ms": 2065.723251127636,
+      "p99_ms": 2198.5362563934223,
+      "responses": 5041,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    },
+    {
+      "step": 2,
+      "target_rps": 600.0,
+      "window_s": [
+        55,
+        70
+      ],
+      "achieved_rps": 35.8,
+      "achieved_sd": 78.4967697242559,
+      "sent_rps": 599.2666666666667,
+      "p50_ms": 4990.706910361382,
+      "p95_ms": 5294.585100941903,
+      "p99_ms": 5443.196794346408,
+      "responses": 8644,
+      "non2xx": 8107,
+      "non2xx_share": 0.9378759833410458,
+      "connerr": 2739
+    }
+  ],
+  "X": 336.06666666666666,
+  "X_sd": 163.78577762547317,
+  "X_step": 1,
+  "X_target_rps": 400.0,
+  "X_p50_ms": 646.3204511022197,
+  "X_p95_ms": 2065.723251127636,
+  "X_p99_ms": 2198.5362563934223,
+  "X_non2xx_share": 0.0,
+  "last_step_held": false,
+  "start_wall": 1792847731.325154,
+  "started_at": "2026-10-24T16:15:31",
+  "instances": 1,
+  "pods": [
+    "dc4cd014153f"
+  ],
+  "docker_stats": [
+    {
+      "t": 1792847727.084506,
+      "rows": [
+        {
+          "BlockIO": "0B / 0B",
+          "CPUPerc": "0.00%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.23%",
+          "MemUsage": "18.01MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "20.3kB / 19.7kB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "35.65%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "21.53%",
+          "MemUsage": "110.2MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "60.2MB / 56.8MB",
+          "PIDs": "6"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "9.16%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.62MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "22.4MB / 40.9MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 406kB",
+          "CPUPerc": "0.33%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "38.96MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "873kB / 106kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847731.9244444,
+      "rows": [
+        {
+          "BlockIO": "0B / 0B",
+          "CPUPerc": "9.70%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.24%",
+          "MemUsage": "18.98MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "291kB / 297kB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "56.95%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "19.27%",
+          "MemUsage": "98.64MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "60.5MB / 57.2MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "15.87%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.22MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "22.5MB / 41.1MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 406kB",
+          "CPUPerc": "0.16%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "39.2MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "882kB / 107kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847735.9872952,
+      "rows": [
+        {
+          "BlockIO": "0B / 0B",
+          "CPUPerc": "10.16%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.26%",
+          "MemUsage": "20.2MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "860kB / 886kB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "45.54%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "19.34%",
+          "MemUsage": "99.02MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "61.1MB / 57.8MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "12.41%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.48%",
+          "MemUsage": "37.7MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "22.8MB / 41.6MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 438kB",
+          "CPUPerc": "0.20%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "38.94MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "891kB / 107kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847740.8105872,
+      "rows": [
+        {
+          "BlockIO": "0B / 0B",
+          "CPUPerc": "8.49%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.26%",
+          "MemUsage": "20.09MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "1.45MB / 1.49MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "95.21%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "21.98%",
+          "MemUsage": "112.5MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "61.9MB / 58.8MB",
+          "PIDs": "6"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "12.95%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.27MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "23.1MB / 42.1MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 438kB",
+          "CPUPerc": "0.32%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "38.95MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "900kB / 108kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847744.9910016,
+      "rows": [
+        {
+          "BlockIO": "0B / 0B",
+          "CPUPerc": "6.86%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.25%",
+          "MemUsage": "19.63MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "2.06MB / 2.12MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "36.71%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "19.34%",
+          "MemUsage": "99.04MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "62.6MB / 59.6MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "13.58%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.28MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "23.4MB / 42.5MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 438kB",
+          "CPUPerc": "0.10%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "39.41MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "909kB / 108kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847749.8079638,
+      "rows": [
+        {
+          "BlockIO": "0B / 0B",
+          "CPUPerc": "13.73%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.26%",
+          "MemUsage": "19.96MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "2.61MB / 2.68MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "52.50%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "19.43%",
+          "MemUsage": "99.46MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "63.2MB / 60.3MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "9.38%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.43MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "23.8MB / 43.1MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 438kB",
+          "CPUPerc": "0.00%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.51%",
+          "MemUsage": "39.68MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "909kB / 108kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847753.9401255,
+      "rows": [
+        {
+          "BlockIO": "0B / 0B",
+          "CPUPerc": "9.20%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.25%",
+          "MemUsage": "19.41MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "3.24MB / 3.32MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "82.45%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "19.31%",
+          "MemUsage": "98.85MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "64MB / 61.2MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "9.50%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.41MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "24.1MB / 43.5MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 438kB",
+          "CPUPerc": "0.08%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "38.94MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "918kB / 109kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847758.7488263,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "7.71%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.25%",
+          "MemUsage": "19.62MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "3.87MB / 3.98MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "57.43%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "19.42%",
+          "MemUsage": "99.45MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "64.7MB / 62MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "13.66%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.56MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "24.5MB / 44.2MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 438kB",
+          "CPUPerc": "0.00%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "38.92MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "927kB / 109kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847763.6693697,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "16.28%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.35%",
+          "MemUsage": "27.14MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "4.79MB / 4.92MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "90.82%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "19.53%",
+          "MemUsage": "99.97MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "66.2MB / 63.6MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "22.21%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.39MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "25MB / 45.3MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 438kB",
+          "CPUPerc": "0.00%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "38.7MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "936kB / 110kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847768.4932525,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "17.69%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.29%",
+          "MemUsage": "22.4MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "6.29MB / 6.41MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "95.90%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "22.02%",
+          "MemUsage": "112.8MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "67.5MB / 65MB",
+          "PIDs": "6"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "15.10%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.48MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "25.5MB / 46.2MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 467kB",
+          "CPUPerc": "0.00%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "38.95MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "945kB / 111kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847773.458412,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "12.64%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.34%",
+          "MemUsage": "26.86MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "7.51MB / 7.64MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "99.54%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "21.95%",
+          "MemUsage": "112.4MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "68.7MB / 66.3MB",
+          "PIDs": "6"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "11.46%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.46MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "25.9MB / 47.1MB",
+          "PIDs": "17"
+        },
+        {
+          "BlockIO": "0B / 467kB",
+          "CPUPerc": "0.00%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "39.46MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "954kB / 111kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847777.553048,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "9.99%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.42%",
+          "MemUsage": "32.61MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "8.76MB / 8.9MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "104.44%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "21.97%",
+          "MemUsage": "112.5MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "70MB / 67.6MB",
+          "PIDs": "6"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "8.41%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.1MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "26.4MB / 48MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 467kB",
+          "CPUPerc": "0.98%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "39.45MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "963kB / 112kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847782.376614,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "21.10%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.64%",
+          "MemUsage": "49.77MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "9.96MB / 10.1MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "98.63%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "20.09%",
+          "MemUsage": "102.8MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "71.2MB / 68.8MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "19.89%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "37.93MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "26.7MB / 48.6MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 467kB",
+          "CPUPerc": "3.81%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.51%",
+          "MemUsage": "39.7MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "972kB / 112kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847786.4326842,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "24.17%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.71%",
+          "MemUsage": "55.47MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "11.2MB / 11.4MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "104.12%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "21.35%",
+          "MemUsage": "109.3MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "72.4MB / 69.9MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "20.27%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.24MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "27.1MB / 49.3MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 467kB",
+          "CPUPerc": "0.22%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "38.75MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "981kB / 113kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847791.443174,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "38.40%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.53%",
+          "MemUsage": "41.53MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "11.8MB / 11.9MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "105.40%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "20.81%",
+          "MemUsage": "106.5MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "73.3MB / 70.4MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "31.23%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.15MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "27.3MB / 49.8MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 467kB",
+          "CPUPerc": "0.12%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.5MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "990kB / 113kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847796.0538218,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "24.18%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.30%",
+          "MemUsage": "23.64MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "12.7MB / 12.7MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "104.95%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "20.63%",
+          "MemUsage": "105.6MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "74.6MB / 71.2MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "29.15%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.52%",
+          "MemUsage": "40.58MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "27.8MB / 50.7MB",
+          "PIDs": "18"
+        },
+        {
+          "BlockIO": "0B / 467kB",
+          "CPUPerc": "0.36%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "39.24MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "999kB / 114kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847801.1664064,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "15.85%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.26%",
+          "MemUsage": "20.23MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "13.4MB / 13.2MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "107.50%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "20.62%",
+          "MemUsage": "105.6MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "75.6MB / 71.8MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "34.40%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.62MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "28.1MB / 51.3MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 500kB",
+          "CPUPerc": "0.08%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "38.99MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "1.01MB / 114kB",
+          "PIDs": "13"
+        }
+      ]
+    },
+    {
+      "t": 1792847805.8954933,
+      "rows": [
+        {
+          "BlockIO": "0B / 4.1kB",
+          "CPUPerc": "10.03%",
+          "Container": "dc8a34fdd865",
+          "ID": "dc8a34fdd865",
+          "MemPerc": "0.26%",
+          "MemUsage": "20.69MiB / 7.634GiB",
+          "Name": "donors-lb-1",
+          "NetIO": "14.6MB / 14.3MB",
+          "PIDs": "9"
+        },
+        {
+          "BlockIO": "3.49MB / 0B",
+          "CPUPerc": "33.73%",
+          "Container": "dc4cd014153f",
+          "ID": "dc4cd014153f",
+          "MemPerc": "20.90%",
+          "MemUsage": "107MiB / 512MiB",
+          "Name": "donors-web-1",
+          "NetIO": "77MB / 72.7MB",
+          "PIDs": "5"
+        },
+        {
+          "BlockIO": "0B / 590kB",
+          "CPUPerc": "9.67%",
+          "Container": "6cfdb21a21d7",
+          "ID": "6cfdb21a21d7",
+          "MemPerc": "0.49%",
+          "MemUsage": "38.29MiB / 7.634GiB",
+          "Name": "donors-db-1",
+          "NetIO": "28.5MB / 52.1MB",
+          "PIDs": "16"
+        },
+        {
+          "BlockIO": "0B / 500kB",
+          "CPUPerc": "0.17%",
+          "Container": "7be60e50a451",
+          "ID": "7be60e50a451",
+          "MemPerc": "0.50%",
+          "MemUsage": "39.02MiB / 7.634GiB",
+          "Name": "donors-prometheus-1",
+          "NetIO": "1.02MB / 115kB",
+          "PIDs": "13"
+        }
+      ]
+    }
+  ],
+  "host_stats": [
+    {
+      "t": 1792847727.0,
+      "host_cpu_pct": 32.0,
+      "python_cpu_s": 2.9375,
+      "python_mem_bytes": 156659712.0
+    },
+    {
+      "t": 1792847732.0,
+      "host_cpu_pct": 7.0,
+      "python_cpu_s": 3.453125,
+      "python_mem_bytes": 160583680.0
+    },
+    {
+      "t": 1792847734.0,
+      "host_cpu_pct": 24.0,
+      "python_cpu_s": 4.1875,
+      "python_mem_bytes": 160579584.0
+    },
+    {
+      "t": 1792847737.0,
+      "host_cpu_pct": 34.0,
+      "python_cpu_s": 4.640625,
+      "python_mem_bytes": 160661504.0
+    },
+    {
+      "t": 1792847739.0,
+      "host_cpu_pct": 23.0,
+      "python_cpu_s": 5.265625,
+      "python_mem_bytes": 168484864.0
+    },
+    {
+      "t": 1792847741.0,
+      "host_cpu_pct": 39.0,
+      "python_cpu_s": 5.71875,
+      "python_mem_bytes": 168538112.0
+    },
+    {
+      "t": 1792847744.0,
+      "host_cpu_pct": 37.0,
+      "python_cpu_s": 6.09375,
+      "python_mem_bytes": 168509440.0
+    },
+    {
+      "t": 1792847746.0,
+      "host_cpu_pct": 43.0,
+      "python_cpu_s": 6.5,
+      "python_mem_bytes": 168591360.0
+    },
+    {
+      "t": 1792847749.0,
+      "host_cpu_pct": 75.0,
+      "python_cpu_s": 6.875,
+      "python_mem_bytes": 168579072.0
+    },
+    {
+      "t": 1792847751.0,
+      "host_cpu_pct": 46.0,
+      "python_cpu_s": 7.421875,
+      "python_mem_bytes": 168624128.0
+    },
+    {
+      "t": 1792847753.0,
+      "host_cpu_pct": 51.0,
+      "python_cpu_s": 8.0625,
+      "python_mem_bytes": 168644608.0
+    },
+    {
+      "t": 1792847756.0,
+      "host_cpu_pct": 47.0,
+      "python_cpu_s": 8.59375,
+      "python_mem_bytes": 168656896.0
+    },
+    {
+      "t": 1792847758.0,
+      "host_cpu_pct": 81.0,
+      "python_cpu_s": 8.984375,
+      "python_mem_bytes": 168779776.0
+    },
+    {
+      "t": 1792847760.0,
+      "host_cpu_pct": 61.0,
+      "python_cpu_s": 9.28125,
+      "python_mem_bytes": 168706048.0
+    },
+    {
+      "t": 1792847763.0,
+      "host_cpu_pct": 90.0,
+      "python_cpu_s": 10.390625,
+      "python_mem_bytes": 187715584.0
+    },
+    {
+      "t": 1792847765.0,
+      "host_cpu_pct": 32.0,
+      "python_cpu_s": 11.453125,
+      "python_mem_bytes": 190496768.0
+    },
+    {
+      "t": 1792847767.0,
+      "host_cpu_pct": 37.0,
+      "python_cpu_s": 12.046875,
+      "python_mem_bytes": 190484480.0
+    },
+    {
+      "t": 1792847770.0,
+      "host_cpu_pct": 28.0,
+      "python_cpu_s": 12.78125,
+      "python_mem_bytes": 190558208.0
+    },
+    {
+      "t": 1792847772.0,
+      "host_cpu_pct": 30.0,
+      "python_cpu_s": 13.703125,
+      "python_mem_bytes": 190558208.0
+    },
+    {
+      "t": 1792847774.0,
+      "host_cpu_pct": 56.0,
+      "python_cpu_s": 14.625,
+      "python_mem_bytes": 193941504.0
+    },
+    {
+      "t": 1792847777.0,
+      "host_cpu_pct": 39.0,
+      "python_cpu_s": 15.25,
+      "python_mem_bytes": 202760192.0
+    },
+    {
+      "t": 1792847779.0,
+      "host_cpu_pct": 59.0,
+      "python_cpu_s": 16.125,
+      "python_mem_bytes": 215506944.0
+    },
+    {
+      "t": 1792847781.0,
+      "host_cpu_pct": 63.0,
+      "python_cpu_s": 17.0,
+      "python_mem_bytes": 243793920.0
+    },
+    {
+      "t": 1792847784.0,
+      "host_cpu_pct": 70.0,
+      "python_cpu_s": 19.0625,
+      "python_mem_bytes": 304451584.0
+    },
+    {
+      "t": 1792847786.0,
+      "host_cpu_pct": 91.0,
+      "python_cpu_s": 22.796875,
+      "python_mem_bytes": 310403072.0
+    },
+    {
+      "t": 1792847788.0,
+      "host_cpu_pct": 100.0,
+      "python_cpu_s": 25.078125,
+      "python_mem_bytes": 312090624.0
+    },
+    {
+      "t": 1792847791.0,
+      "host_cpu_pct": 98.0,
+      "python_cpu_s": 28.03125,
+      "python_mem_bytes": 328777728.0
+    },
+    {
+      "t": 1792847793.0,
+      "host_cpu_pct": 100.0,
+      "python_cpu_s": 31.53125,
+      "python_mem_bytes": 314019840.0
+    },
+    {
+      "t": 1792847795.0,
+      "host_cpu_pct": 100.0,
+      "python_cpu_s": 33.78125,
+      "python_mem_bytes": 318709760.0
+    },
+    {
+      "t": 1792847798.0,
+      "host_cpu_pct": 98.0,
+      "python_cpu_s": 37.96875,
+      "python_mem_bytes": 321953792.0
+    },
+    {
+      "t": 1792847800.0,
+      "host_cpu_pct": 100.0,
+      "python_cpu_s": 40.265625,
+      "python_mem_bytes": 303022080.0
+    },
+    {
+      "t": 1792847803.0,
+      "host_cpu_pct": 92.0,
+      "python_cpu_s": 43.65625,
+      "python_mem_bytes": 324575232.0
+    },
+    {
+      "t": 1792847805.0,
+      "host_cpu_pct": 74.0,
+      "python_cpu_s": 43.734375,
+      "python_mem_bytes": 279441408.0
+    },
+    {
+      "t": 1792847807.0,
+      "host_cpu_pct": 24.0,
+      "python_cpu_s": 1.265625,
+      "python_mem_bytes": 38559744.0
+    }
+  ],
+  "prom_steps": [
+    {
+      "step": 0,
+      "target_rps": 200.0,
+      "window_unix": [
+        1792847746.325154,
+        1792847761.325154
+      ],
+      "server_p99": {
+        "q": 0.99,
+        "n": 3011.0,
+        "rank": 2980.89,
+        "value_s": 0.44661347517730476,
+        "bucket": [
+          0.25,
+          0.5
+        ],
+        "max_error_s": 0.25,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 3002.0,
+        "rank": 2971.98,
+        "value_s": 0.24998706896551726,
+        "bucket": [
+          0.1,
+          0.25
+        ],
+        "max_error_s": 0.15,
+        "beyond_last": false
+      },
+      "instances_up": 1.0,
+      "cpu_per_instance": 7.97999999999999,
+      "rps_server_total": 200.3,
+      "in_flight_per_instance": 2.0,
+      "pool_busy_per_instance": 0.6666666666666666,
+      "pool_busy_max": 2.0,
+      "cpu_cores_per_instance": 0.5319999999999994
+    },
+    {
+      "step": 1,
+      "target_rps": 400.0,
+      "window_unix": [
+        1792847766.325154,
+        1792847781.325154
+      ],
+      "server_p99": {
+        "q": 0.99,
+        "n": 5701.0,
+        "rank": 5643.99,
+        "value_s": 1.0,
+        "bucket": [
+          1.0,
+          Infinity
+        ],
+        "max_error_s": null,
+        "beyond_last": true,
+        "label": "> 1.0"
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 5698.0,
+        "rank": 5641.0199999999995,
+        "value_s": 1.0,
+        "bucket": [
+          1.0,
+          Infinity
+        ],
+        "max_error_s": null,
+        "beyond_last": true,
+        "label": "> 1.0"
+      },
+      "instances_up": 1.0,
+      "cpu_per_instance": 12.015000000000029,
+      "rps_server_total": 366.0,
+      "in_flight_per_instance": 274.3333333333333,
+      "pool_busy_per_instance": 8.666666666666666,
+      "pool_busy_max": 10.0,
+      "cpu_cores_per_instance": 0.8010000000000019
+    },
+    {
+      "step": 2,
+      "target_rps": 600.0,
+      "window_unix": [
+        1792847786.325154,
+        1792847801.325154
+      ],
+      "server_p99": {
+        "q": 0.99,
+        "n": 3842.0,
+        "rank": 3803.58,
+        "value_s": 1.0,
+        "bucket": [
+          1.0,
+          Infinity
+        ],
+        "max_error_s": null,
+        "beyond_last": true,
+        "label": "> 1.0"
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 3837.0,
+        "rank": 3798.63,
+        "value_s": 1.0,
+        "bucket": [
+          1.0,
+          Infinity
+        ],
+        "max_error_s": null,
+        "beyond_last": true,
+        "label": "> 1.0"
+      },
+      "instances_up": 1.0,
+      "cpu_per_instance": 12.303455182774158,
+      "rps_server_total": 260.29043565348024,
+      "in_flight_per_instance": 959.6666666666666,
+      "pool_busy_per_instance": 4.333333333333333,
+      "pool_busy_max": 6.0,
+      "cpu_cores_per_instance": 0.8202303455182772
+    }
+  ],
+  "prom_series_file": "N1_prom.json"
+}

@@ -1,0 +1,19 @@
+# Збір метрик стенду. Екземпляри web знаходяться через DNS Compose:
+# A-запит за іменем сервісу повертає адреси всіх його контейнерів.
+global:
+  scrape_interval: 5s
+  scrape_timeout: 4s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: web
+    metrics_path: /metrics
+    dns_sd_configs:
+      - names: [web]
+        type: A
+        port: 8000
+        refresh_interval: 5s
+
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]

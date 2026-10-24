@@ -1,0 +1,97 @@
+# HELP python_gc_objects_collected_total Objects collected during gc
+# TYPE python_gc_objects_collected_total counter
+python_gc_objects_collected_total{generation="0"} 385.0
+python_gc_objects_collected_total{generation="1"} 81.0
+python_gc_objects_collected_total{generation="2"} 40.0
+# HELP python_gc_objects_uncollectable_total Uncollectable objects found during GC
+# TYPE python_gc_objects_uncollectable_total counter
+python_gc_objects_uncollectable_total{generation="0"} 0.0
+python_gc_objects_uncollectable_total{generation="1"} 0.0
+python_gc_objects_uncollectable_total{generation="2"} 0.0
+# HELP python_gc_collections_total Number of times this generation was collected
+# TYPE python_gc_collections_total counter
+python_gc_collections_total{generation="0"} 138.0
+python_gc_collections_total{generation="1"} 12.0
+python_gc_collections_total{generation="2"} 1.0
+# HELP python_info Python platform information
+# TYPE python_info gauge
+python_info{implementation="CPython",major="3",minor="12",patchlevel="15",version="3.12.15"} 1.0
+# HELP process_virtual_memory_bytes Virtual memory size in bytes.
+# TYPE process_virtual_memory_bytes gauge
+process_virtual_memory_bytes 4.05409792e+08
+# HELP process_resident_memory_bytes Resident memory size in bytes.
+# TYPE process_resident_memory_bytes gauge
+process_resident_memory_bytes 7.000064e+07
+# HELP process_start_time_seconds Start time of the process since unix epoch in seconds.
+# TYPE process_start_time_seconds gauge
+process_start_time_seconds 1.79261603206e+09
+# HELP process_cpu_seconds_total Total user and system CPU time spent in seconds.
+# TYPE process_cpu_seconds_total counter
+process_cpu_seconds_total 2.21
+# HELP process_open_fds Number of open file descriptors.
+# TYPE process_open_fds gauge
+process_open_fds 26.0
+# HELP process_max_fds Maximum number of open file descriptors.
+# TYPE process_max_fds gauge
+process_max_fds 1.048576e+06
+# HELP http_requests_total Кількість запитів
+# TYPE http_requests_total counter
+http_requests_total{code="200",method="GET",path="/healthz"} 10.0
+http_requests_total{code="200",method="GET",path="/metrics"} 6.0
+# HELP http_requests_created Кількість запитів
+# TYPE http_requests_created gauge
+http_requests_created{code="200",method="GET",path="/healthz"} 1.7926160391615498e+09
+http_requests_created{code="200",method="GET",path="/metrics"} 1.7926160431414723e+09
+# HELP http_request_duration_seconds Тривалість обробки запиту, с
+# TYPE http_request_duration_seconds histogram
+http_request_duration_seconds_bucket{le="0.005",method="GET",path="/healthz"} 9.0
+http_request_duration_seconds_bucket{le="0.01",method="GET",path="/healthz"} 9.0
+http_request_duration_seconds_bucket{le="0.025",method="GET",path="/healthz"} 10.0
+http_request_duration_seconds_bucket{le="0.05",method="GET",path="/healthz"} 10.0
+http_request_duration_seconds_bucket{le="0.1",method="GET",path="/healthz"} 10.0
+http_request_duration_seconds_bucket{le="0.25",method="GET",path="/healthz"} 10.0
+http_request_duration_seconds_bucket{le="0.5",method="GET",path="/healthz"} 10.0
+http_request_duration_seconds_bucket{le="1.0",method="GET",path="/healthz"} 10.0
+http_request_duration_seconds_bucket{le="+Inf",method="GET",path="/healthz"} 10.0
+http_request_duration_seconds_count{method="GET",path="/healthz"} 10.0
+http_request_duration_seconds_sum{method="GET",path="/healthz"} 0.04114740299985442
+http_request_duration_seconds_bucket{le="0.005",method="GET",path="/metrics"} 6.0
+http_request_duration_seconds_bucket{le="0.01",method="GET",path="/metrics"} 6.0
+http_request_duration_seconds_bucket{le="0.025",method="GET",path="/metrics"} 6.0
+http_request_duration_seconds_bucket{le="0.05",method="GET",path="/metrics"} 6.0
+http_request_duration_seconds_bucket{le="0.1",method="GET",path="/metrics"} 6.0
+http_request_duration_seconds_bucket{le="0.25",method="GET",path="/metrics"} 6.0
+http_request_duration_seconds_bucket{le="0.5",method="GET",path="/metrics"} 6.0
+http_request_duration_seconds_bucket{le="1.0",method="GET",path="/metrics"} 6.0
+http_request_duration_seconds_bucket{le="+Inf",method="GET",path="/metrics"} 6.0
+http_request_duration_seconds_count{method="GET",path="/metrics"} 6.0
+http_request_duration_seconds_sum{method="GET",path="/metrics"} 0.015415918999906353
+# HELP http_request_duration_seconds_created Тривалість обробки запиту, с
+# TYPE http_request_duration_seconds_created gauge
+http_request_duration_seconds_created{method="GET",path="/healthz"} 1.7926160391614594e+09
+http_request_duration_seconds_created{method="GET",path="/metrics"} 1.7926160431414323e+09
+# HELP http_requests_in_flight Кількість запитів в обробці
+# TYPE http_requests_in_flight gauge
+http_requests_in_flight 1.0
+# HELP db_pool_connections_busy Зайняті зʼєднання пулу
+# TYPE db_pool_connections_busy gauge
+db_pool_connections_busy 0.0
+# HELP db_pool_size Розмір пулу зʼєднань
+# TYPE db_pool_size gauge
+db_pool_size 10.0
+# HELP db_pool_wait_seconds Час очікування зʼєднання з пулу, с
+# TYPE db_pool_wait_seconds histogram
+db_pool_wait_seconds_bucket{le="0.005"} 10.0
+db_pool_wait_seconds_bucket{le="0.01"} 10.0
+db_pool_wait_seconds_bucket{le="0.025"} 10.0
+db_pool_wait_seconds_bucket{le="0.05"} 10.0
+db_pool_wait_seconds_bucket{le="0.1"} 10.0
+db_pool_wait_seconds_bucket{le="0.25"} 10.0
+db_pool_wait_seconds_bucket{le="0.5"} 10.0
+db_pool_wait_seconds_bucket{le="1.0"} 10.0
+db_pool_wait_seconds_bucket{le="+Inf"} 10.0
+db_pool_wait_seconds_count 10.0
+db_pool_wait_seconds_sum 0.0004940209997812417
+# HELP db_pool_wait_seconds_created Час очікування зʼєднання з пулу, с
+# TYPE db_pool_wait_seconds_created gauge
+db_pool_wait_seconds_created 1.792616034785631e+09

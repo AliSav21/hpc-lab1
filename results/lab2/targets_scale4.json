@@ -1,0 +1,131 @@
+{
+  "status": "success",
+  "data": {
+    "activeTargets": [
+      {
+        "discoveredLabels": {
+          "__address__": "localhost:9090",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "4s",
+          "job": "prometheus"
+        },
+        "labels": {
+          "instance": "localhost:9090",
+          "job": "prometheus"
+        },
+        "scrapePool": "prometheus",
+        "scrapeUrl": "http://localhost:9090/metrics",
+        "globalUrl": "http://0fe00430a9ad:9090/metrics",
+        "lastError": "",
+        "lastScrape": "2026-10-21T20:48:14.226664491Z",
+        "lastScrapeDuration": 0.00468027,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "4s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "172.22.0.4:8000",
+          "__meta_dns_name": "web",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "4s",
+          "job": "web"
+        },
+        "labels": {
+          "instance": "172.22.0.4:8000",
+          "job": "web"
+        },
+        "scrapePool": "web",
+        "scrapeUrl": "http://172.22.0.4:8000/metrics",
+        "globalUrl": "http://172.22.0.4:8000/metrics",
+        "lastError": "",
+        "lastScrape": "2026-10-21T20:48:17.029523282Z",
+        "lastScrapeDuration": 0.004316104,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "4s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "172.22.0.5:8000",
+          "__meta_dns_name": "web",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "4s",
+          "job": "web"
+        },
+        "labels": {
+          "instance": "172.22.0.5:8000",
+          "job": "web"
+        },
+        "scrapePool": "web",
+        "scrapeUrl": "http://172.22.0.5:8000/metrics",
+        "globalUrl": "http://172.22.0.5:8000/metrics",
+        "lastError": "",
+        "lastScrape": "2026-10-21T20:48:15.589435362Z",
+        "lastScrapeDuration": 0.003459824,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "4s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "172.22.0.7:8000",
+          "__meta_dns_name": "web",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "4s",
+          "job": "web"
+        },
+        "labels": {
+          "instance": "172.22.0.7:8000",
+          "job": "web"
+        },
+        "scrapePool": "web",
+        "scrapeUrl": "http://172.22.0.7:8000/metrics",
+        "globalUrl": "http://172.22.0.7:8000/metrics",
+        "lastError": "",
+        "lastScrape": "2026-10-21T20:48:16.434675267Z",
+        "lastScrapeDuration": 0.0133347,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "4s"
+      },
+      {
+        "discoveredLabels": {
+          "__address__": "172.22.0.6:8000",
+          "__meta_dns_name": "web",
+          "__metrics_path__": "/metrics",
+          "__scheme__": "http",
+          "__scrape_interval__": "5s",
+          "__scrape_timeout__": "4s",
+          "job": "web"
+        },
+        "labels": {
+          "instance": "172.22.0.6:8000",
+          "job": "web"
+        },
+        "scrapePool": "web",
+        "scrapeUrl": "http://172.22.0.6:8000/metrics",
+        "globalUrl": "http://172.22.0.6:8000/metrics",
+        "lastError": "",
+        "lastScrape": "2026-10-21T20:48:12.580967218Z",
+        "lastScrapeDuration": 0.007155548,
+        "health": "up",
+        "scrapeInterval": "5s",
+        "scrapeTimeout": "4s"
+      }
+    ],
+    "droppedTargets": [],
+    "droppedTargetCounts": {
+      "prometheus": 0,
+      "web": 0
+    }
+  }
+}

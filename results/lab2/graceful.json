@@ -1,0 +1,48 @@
+{
+  "label": "коректна зупинка",
+  "base": "http://127.0.0.1:18080",
+  "path": "/donor-registry/{id}",
+  "procs": 4,
+  "profile": {
+    "warmup_s": 5.0,
+    "warmup_rate": 200.0,
+    "step_s": 60.0,
+    "rate0": 200.0,
+    "rate_step": 0.0,
+    "transient_s": 5.0,
+    "timeout_s": 5.0
+  },
+  "max_rate_G": null,
+  "stop_reason": "max_steps",
+  "steps": [
+    {
+      "step": 0,
+      "target_rps": 200.0,
+      "window_s": [
+        10,
+        65
+      ],
+      "achieved_rps": 197.63636363636363,
+      "achieved_sd": 42.3894482137397,
+      "sent_rps": 200.0,
+      "p50_ms": 6.569285693112548,
+      "p95_ms": 565.4295121212491,
+      "p99_ms": 1245.873821036799,
+      "responses": 10870,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    }
+  ],
+  "X": 197.63636363636363,
+  "X_sd": 42.3894482137397,
+  "X_step": 0,
+  "X_target_rps": 200.0,
+  "X_p50_ms": 6.569285693112548,
+  "X_p95_ms": 565.4295121212491,
+  "X_p99_ms": 1245.873821036799,
+  "X_non2xx_share": 0.0,
+  "last_step_held": true,
+  "start_wall": 1792615944.327252,
+  "started_at": "2026-10-21T23:52:24"
+}

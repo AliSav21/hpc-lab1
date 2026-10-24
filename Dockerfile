@@ -16,4 +16,5 @@ WORKDIR /srv
 COPY app ./app
 USER 10001
 EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log"]
+# exec-форма: SIGTERM отримує сам uvicorn, не оболонка
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--no-access-log", "--timeout-graceful-shutdown", "25"]

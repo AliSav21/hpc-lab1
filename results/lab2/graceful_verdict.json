@@ -1,0 +1,16 @@
+{
+  "victim": "bf5237c4fa46915f2f8f830cbce995b821a881b09e2912ef8f71afbee02e109a",
+  "stopped_at_run_s": 29.75405192375183,
+  "window_run_s": [
+    19.75405192375183,
+    39.75405192375183
+  ],
+  "exit_code": 0,
+  "stop_took_s": 1.0696005821228027,
+  "non2xx_in_window": 0,
+  "connerr_in_window": 0,
+  "bad_seconds": [],
+  "passed": true,
+  "achieved_rps": 197.63636363636363,
+  "target_rps": 200.0
+}

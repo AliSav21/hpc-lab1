@@ -2,7 +2,11 @@
 
 Ресурс `/donor-registry`, FastAPI + PostgreSQL 16 + nginx, Docker Compose.
 Коротка інструкція запуску: [RUN.md](RUN.md). Детальна інструкція користування: [HOWTO.md](HOWTO.md).
-Звіт: [REPORT.md](REPORT.md).
+Звіт лабораторної роботи 1: [REPORT.md](REPORT.md).
+
+**Лабораторна робота 2** (метрики Prometheus і межа масштабованості, варіант 19):
+звіт [REPORT-LAB2.md](REPORT-LAB2.md), інструкція вимірювань [RUN-LAB2.md](RUN-LAB2.md).
+Метрики сервісу на `GET /metrics`, Prometheus на `http://127.0.0.1:19090` (порт `PROM_PORT`).
 
 ## Запуск (одна команда)
 
@@ -42,7 +46,7 @@ python loadgen/run_series.py selfcheck              # перевірка сам�
 python loadgen/run_series.py series --instances 1   # 10/100/500 rps x 3 повтори, прогрів 10 с + 30 с
 python loadgen/run_series.py series --instances 2
 python loadgen/run_series.py distribution           # розподіл запитів між двома інстансами
-python loadgen/run_series.py closed --rate 500      # закритий контур (рівень, де 1 інстанс не тримає ціль)
+python loadgen/run_series.py closed --rate 700      # закритий контур (рівень, де 1 інстанс не тримає ціль)
 python loadgen/aggregate.py                         # медіани -> results/table.md
 python loadgen/calc.py                              # три розрахунки -> results/calculations.md
 ```

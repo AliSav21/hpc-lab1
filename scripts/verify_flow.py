@@ -64,10 +64,16 @@ def flow():
     call("POST", "/donor-registry", donor(birth_year=date.today().year - 10), "400: вік 10 років")
     call("POST", "/donor-registry", donor(birth_year=date.today().year - 70), "400: вік 70 років")
     call("POST", "/donor-registry", donor(blood_group="X"), "400: невалідна група крові")
+    call("POST", "/donor-registry", donor(donor_code="D-\u0000-X"),
+         "400: керівний символ у donor_code")
+    call("POST", "/donor-registry", donor(hla_typing=["A*02:01\u0000"]),
+         "400: керівний символ у hla_typing")
     call("POST", "/donor-registry", donor(donor_code=d["donor_code"]), "409: дубль donor_code")
     call("GET", "/donor-registry?limit=5", note="перелік")
     call("GET", "/donor-registry?available=false&limit=5", note="перелік з фільтром available=false")
     call("GET", "/donor-registry?limit=1000", note="400: limit понад максимум")
+    call("GET", "/donor-registry?offset=99999999999999999999",
+         note="400: offset понад межу BIGINT")
     call("GET", f"/donor-registry/{i}", note="за ідентифікатором")
     call("PUT", f"/donor-registry/{i}", donor(donor_code=d["donor_code"], available=False, blood_group="AB-"),
          "повна заміна")

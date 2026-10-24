@@ -19,6 +19,7 @@ from urllib.parse import urlparse
 TIMEOUT = 5.0   # таймаут одного запиту, с
 DRAIN = 15.0    # дочікування після прогону, с
 START_DELAY = 3.0
+L_SAMPLE_S = 0.01   # крок знімання кількості запитів у системі (незалежний лічильник L)
 
 _local = threading.local()
 
@@ -58,11 +59,32 @@ def open_worker(a):
     t0 = time.perf_counter() + (start - time.time())  # початок прогону в perf_counter
     records = []                              # (i, t_rel, latency, status, instance)
 
+    # Незалежний лічильник для закону Літтла: кількість запитів у системі знімається
+    # через рівні проміжки часу, а не виводиться з тих самих записів, що й W.
+    lock = threading.Lock()
+    cnt = {"submitted": 0, "dispatched": 0, "done": 0}
+    samples = []                              # (t_rel, у сервісі, у черзі генератора)
+    sampling_over = threading.Event()
+
+    def sampler():
+        while not sampling_over.is_set():
+            with lock:
+                in_service = cnt["dispatched"] - cnt["done"]
+                in_queue = cnt["submitted"] - cnt["dispatched"]
+            samples.append((time.perf_counter() - t0, in_service, in_queue))
+            sampling_over.wait(L_SAMPLE_S)
+
     def task(i, t_rel, path):
+        with lock:
+            cnt["dispatched"] += 1
         status, inst = http_get(host, port, path)
+        with lock:
+            cnt["done"] += 1
         records.append((i, t_rel, time.perf_counter() - t0 - t_rel, status, inst))
 
     ex = ThreadPoolExecutor(threads)
+    sampler_thread = threading.Thread(target=sampler, daemon=True)
+    sampler_thread.start()
     futs = []
     for i in range(n):
         t_rel = k / rate + i * step
@@ -70,6 +92,8 @@ def open_worker(a):
         delay = t0 + t_rel - time.perf_counter()
         if delay > 0:
             time.sleep(delay)
+        with lock:
+            cnt["submitted"] += 1
         futs.append((t_rel, ex.submit(task, i, t_rel, path)))
     deadline = t0 + total + DRAIN
     for _, f in futs:
@@ -81,6 +105,8 @@ def open_worker(a):
         except Exception:
             pass
     ex.shutdown(wait=False, cancel_futures=True)
+    sampling_over.set()
+    sampler_thread.join(timeout=2)
     done = list(records)
     seen = {r[0] for r in done}
     for i, (t_rel, _) in enumerate(futs):
@@ -88,7 +114,7 @@ def open_worker(a):
             done.append((i, t_rel, deadline - t0 - t_rel, -1, ""))
     for i in range(len(futs), n):  # не відправлено взагалі
         done.append((i, k / rate + i * step, deadline - t0 - (k / rate + i * step), -1, ""))
-    return done
+    return done, samples
 
 
 def closed_worker(a):
@@ -183,6 +209,12 @@ def closed_worker_async(a):
     return records
 
 
+def window_mean(samples, idx, w0, w1):
+    """Середнє значення знятої величини за вікном вимірювання."""
+    vals = [s[idx] for s in samples if w0 <= s[0] < w1]
+    return sum(vals) / len(vals) if vals else 0.0
+
+
 def pct(sorted_vals, p):
     if not sorted_vals:
         return None
@@ -243,9 +275,17 @@ def run_open(base, path, ids, rate, warmup, duration, procs=None, threads=64, ou
     args = [(base, path, ids, rate, warmup, duration, start, threads, k, procs, 1000 + k)
             for k in range(procs)]
     with mp.get_context("spawn").Pool(procs) as pool:
-        records = [r for part in pool.map(open_worker, args) for r in part]
+        parts = pool.map(open_worker, args)
+    records = [r for part, _ in parts for r in part]
+    # L сумується по процесах: середнє суми дорівнює сумі середніх
+    w0, w1 = warmup, warmup + duration
+    sampled = [s for _, s in parts]
     summary = {"mode": "open", "base": base, "path": path, "rate": rate, "warmup_s": warmup,
                "duration_s": duration, "procs": procs, "threads_per_proc": threads,
+               "L_sampled_in_service": sum(window_mean(s, 1, w0, w1) for s in sampled),
+               "L_sampled_in_gen_queue": sum(window_mean(s, 2, w0, w1) for s in sampled),
+               "L_samples_per_worker": [sum(1 for x in s if w0 <= x[0] < w1) for s in sampled],
+               "L_sample_interval_s": L_SAMPLE_S,
                **summarize(records, warmup, duration)}
     if out:
         save(out, records, summary)

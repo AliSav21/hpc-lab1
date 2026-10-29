@@ -1,0 +1,63 @@
+# Job міграції схеми: виконується до успішного завершення. SQL підкладає команда
+# розгортання як ConfigMap db-schema з файла db/schema.sql (одне джерело зі стендом Compose).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrate
+  namespace: donors
+spec:
+  backoffLimit: 10
+  template:
+    metadata:
+      labels:
+        app: db-migrate
+    spec:
+      restartPolicy: OnFailure
+      nodeSelector:
+        role: infra
+      tolerations:
+        - key: node-role.kubernetes.io/control-plane
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: psql
+          image: postgres:16-alpine
+          command:
+            - sh
+            - -c
+            - |
+              set -e
+              until pg_isready -h "$DB_HOST" -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do
+                echo "чекаю базу"; sleep 2
+              done
+              psql -v ON_ERROR_STOP=1 -h "$DB_HOST" -U "$POSTGRES_USER" -d "$POSTGRES_DB" \
+                   -f /schema/schema.sql
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: DB_HOST
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: POSTGRES_USER
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: POSTGRES_DB
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_PASSWORD
+          volumeMounts:
+            - name: schema
+              mountPath: /schema
+              readOnly: true
+      volumes:
+        - name: schema
+          configMap:
+            name: db-schema

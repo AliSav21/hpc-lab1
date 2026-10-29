@@ -1,0 +1,68 @@
+# Values для чарта kube-prometheus-stack (крок 5). Grafana і Alertmanager вимкнено:
+# на цьому стенді потрібні лише ряди метрик, а вільного CPU в кластері мало.
+grafana:
+  enabled: false
+alertmanager:
+  enabled: false
+
+prometheus:
+  service:
+    type: NodePort
+    nodePort: 30090
+  prometheusSpec:
+    # крок 5: інтервал збору 5 секунд
+    scrapeInterval: 5s
+    scrapeTimeout: 4s
+    evaluationInterval: 5s
+    retention: 24h
+    # без цих двох прапорців оператор шукає лише обʼєкти з міткою свого випуску
+    podMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    # моніторинг на вузлі role=infra, щоб не відбирати CPU у подів web
+    nodeSelector:
+      role: infra
+    tolerations:
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+    resources:
+      requests:
+        cpu: 100m
+        memory: 400Mi
+
+prometheusOperator:
+  nodeSelector:
+    role: infra
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+
+kube-state-metrics:
+  nodeSelector:
+    role: infra
+  tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+  # ряди kube_deployment_status_replicas_ready і kube_horizontalpodautoscaler_* потрібні кроками 11-12
+  metricLabelsAllowlist:
+    - pods=[app]
+
+# cAdvisor збирається через kubelet (ServiceMonitor чарта), node-exporter лишається на всіх вузлах
+kubelet:
+  enabled: true
+
+# У kind компоненти керівного вузла слухають 127.0.0.1 всередині свого контейнера,
+# тому їхні типові таргети завжди "down" і лише заважають читати Status -> Targets.
+# Для цієї роботи вони не потрібні: збираються метрики подів web, cAdvisor і kube-state-metrics.
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false
+kubeEtcd:
+  enabled: false
+kubeProxy:
+  enabled: false

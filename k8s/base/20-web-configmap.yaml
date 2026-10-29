@@ -1,0 +1,14 @@
+# Налаштування сервісу. Пароля тут немає: він лише в Secret db-secret.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: web-config
+  namespace: donors
+data:
+  # варіант 19 (лабораторна робота 2): розмір пулу 10
+  DB_POOL_SIZE: "10"
+  # стале імʼя пода StatefulSet через headless Service
+  DB_HOST: db-0.db.donors.svc.cluster.local
+  DB_PORT: "5432"
+  POSTGRES_USER: donors
+  POSTGRES_DB: donors

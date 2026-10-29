@@ -1,0 +1,20 @@
+# Кластер для лабораторної роботи 3, варіант 19: один вузол control-plane і два worker.
+# Файл подається в kind create cluster --config, у кластер не застосовується.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: hpc
+nodes:
+  - role: control-plane
+    # NodePort доступний на кожному вузлі кластера, тому перенаправлення портів
+    # достатньо зробити на control-plane, хоча поди web працюють на worker-вузлах.
+    extraPortMappings:
+      - containerPort: 30080   # Service web
+        hostPort: 18080
+        listenAddress: "127.0.0.1"
+        protocol: TCP
+      - containerPort: 30090   # Prometheus
+        hostPort: 19090
+        listenAddress: "127.0.0.1"
+        protocol: TCP
+  - role: worker
+  - role: worker

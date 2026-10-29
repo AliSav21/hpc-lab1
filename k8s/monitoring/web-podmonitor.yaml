@@ -1,0 +1,18 @@
+# Пошук подів web: у кластері немає DNS-списку екземплярів, як у Compose,
+# тому Prometheus знаходить поди через мітку app=web.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: web
+  namespace: donors
+  labels:
+    app: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  podMetricsEndpoints:
+    - port: http
+      path: /metrics
+      interval: 5s
+      scrapeTimeout: 4s

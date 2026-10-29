@@ -1,0 +1,28 @@
+# Values для чарта prometheus-postgres-exporter. Ставиться в namespace donors,
+# щоб узяти пароль із того самого Secret db-secret.
+config:
+  datasource:
+    host: db-0.db.donors.svc.cluster.local
+    port: "5432"
+    user: donors
+    database: donors
+    passwordSecret:
+      name: db-secret
+      key: POSTGRES_PASSWORD
+    sslmode: disable
+
+serviceMonitor:
+  enabled: true
+  interval: 5s
+
+nodeSelector:
+  role: infra
+tolerations:
+  - key: node-role.kubernetes.io/control-plane
+    operator: Exists
+    effect: NoSchedule
+
+resources:
+  requests:
+    cpu: 20m
+    memory: 32Mi

@@ -1,0 +1,151 @@
+# Поля replicas немає навмисно: кількість реплік задають kubectl scale (крок 7) і HPA (крок 11),
+# а поле в маніфесті повертало б її до свого значення при кожному застосуванні.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: donors
+  labels:
+    app: web
+spec:
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      # Д1: поди розподіляються рівномірно по двох worker-вузлах
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          # без цього вузол control-plane рахується як окремий домен, хоча його taint
+          # не пускає туди поди: 2+2+0 дає розбіжність 2 і планувальник відмовляє
+          nodeTaintsPolicy: Honor
+          labelSelector:
+            matchLabels:
+              app: web
+      terminationGracePeriodSeconds: 15
+      # На свіжому кластері база піднімається 1-2 хвилини, і доти DNS-імʼя пода
+      # StatefulSet ще не резолвиться. Пул psycopg після довгої серії невдалих спроб
+      # припиняє їх, і сервіс лишається з мертвим пулом: /livez віддає 200, а /healthz
+      # назавжди 503. Тому контейнер web стартує лише тоді, коли база приймає зʼєднання.
+      # Образ той самий, що й у сервісу: він уже завантажений у кластер через kind load.
+      initContainers:
+        - name: wait-db
+          image: donor-registry:lab3
+          imagePullPolicy: IfNotPresent
+          command:
+            - python
+            - -c
+            - |
+              import os, socket, time
+              host, port = os.environ["DB_HOST"], int(os.environ["DB_PORT"])
+              while True:
+                  try:
+                      with socket.create_connection((host, port), timeout=3):
+                          print("база приймає зʼєднання", flush=True)
+                          break
+                  except OSError as e:
+                      print(f"чекаю базу: {e}", flush=True)
+                      time.sleep(2)
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: DB_PORT
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+      containers:
+        - name: web
+          image: donor-registry:lab3
+          # образ завантажено в кластер через kind load docker-image, реєстру немає
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8000
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: DB_PORT
+            - name: POSTGRES_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: POSTGRES_USER
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: POSTGRES_DB
+            - name: DB_POOL_SIZE
+              valueFrom:
+                configMapKeyRef:
+                  name: web-config
+                  key: DB_POOL_SIZE
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: POSTGRES_PASSWORD
+            # Downward API: імʼя пода йде у заголовок X-Pod
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+          resources:
+            # варіант 19: requests 500m, limits 1 ядро
+            requests:
+              cpu: 500m
+              memory: 128Mi
+            limits:
+              cpu: "1"
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            timeoutSeconds: 3
+            periodSeconds: 5
+            failureThreshold: 3
+          # Поки база недоступна, сервіс чекає на неї і ще не слухає порт. На свіжому
+          # кластері база піднімається довше, ніж витримує livenessProbe, і kubelet
+          # перезапускав контейнер на старті. startupProbe притримує обидві інші проби,
+          # поки порт не відкриється: до 36 × 5 = 180 с.
+          startupProbe:
+            httpGet:
+              path: /livez
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 36
+          livenessProbe:
+            httpGet:
+              path: /livez
+              port: http
+            timeoutSeconds: 3
+            periodSeconds: 10
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              # пауза дає kube-proxy вилучити под з маршрутизації до SIGTERM
+              # (поле sleep доступне з Kubernetes 1.30)
+              sleep:
+                seconds: 5

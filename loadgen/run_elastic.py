@@ -8,7 +8,7 @@ import subprocess
 import time
 from pathlib import Path
 
-from loadgen import profile, prom
+from loadgen import profile, prom, step as step_mod
 from loadgen.run_k8s import CTX, NS, SEL, WEB, kubectl, scale, wait_ready
 from loadgen.seed import ensure_ids
 from loadgen.step import default_base
@@ -81,6 +81,8 @@ def main():
     ap.add_argument("--prom", default=None)
     a = ap.parse_args()
 
+    # той самий клієнт, що й у серії кроку 7: 32 зʼєднання по 100 запитів
+    step_mod.configure(conns=32, req_per_conn=100)
     base = a.base or default_base()
     url = a.prom or prom.default_url()
     name = a.name or ("profile_fixed" if a.mode == "fixed" else "profile_hpa")

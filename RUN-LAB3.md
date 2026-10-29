@@ -131,14 +131,15 @@ Prometheus на http://127.0.0.1:19090 — перевірити, що є ряд�
 
 ```powershell
 kubectl delete hpa web -n donors --ignore-not-found
-$env:STEP_RATE0 = "50"; $env:STEP_RATE_STEP = "50"
 .\.venv\Scripts\python.exe -m loadgen.run_k8s --replicas 1 --max-rate 700
 .\.venv\Scripts\python.exe -m loadgen.run_k8s --replicas 2 --max-rate 700
 .\.venv\Scripts\python.exe -m loadgen.run_k8s --replicas 3 --max-rate 700
 .\.venv\Scripts\python.exe -m loadgen.run_k8s --replicas 4 --max-rate 700
 ```
 
-Сходинка 50 rps замість 200 rps з ЛР2: у кластері X(N) у кілька разів менші, і на грубій сітці
+Профіль ЛР3 задає сам `run_k8s`: сходинка 30 с із середніми за останні 20 с, 32 постійних
+зʼєднання по 100 запитів, сходинки по 50 rps (прапорці `--rate0` і `--rate-step`). Сходинка
+дрібніша за 200 rps із ЛР2, бо в кластері X(N) у кілька разів менші, і на грубій сітці
 похибка робила підбір σ і κ беззмістовним (пояснення у звіті). `--max-rate 700` це межа стенду,
 виміряна на `/livez`; вона ж зупиняє прогін, якщо сервіс її дістає.
 

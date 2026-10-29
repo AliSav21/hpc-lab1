@@ -27,9 +27,9 @@ def _env(name, default):
 
 TIMEOUT = _env("STEP_TIMEOUT_S", 5.0)       # таймаут запиту, с; перевищення = відповідь не 2xx
 WARMUP_S = _env("STEP_WARMUP_S", 10.0)      # прогрів
-STEP_S = _env("STEP_DURATION_S", 30.0)      # тривалість сходинки (крок 6 ЛР3)
-TRANSIENT_S = _env("STEP_TRANSIENT_S", 10.0)  # перехідна частина сходинки, не враховується
-MEASURE_S = STEP_S - TRANSIENT_S            # вікно вимірювання сходинки, 20 с
+STEP_S = _env("STEP_DURATION_S", 20.0)      # тривалість сходинки (профіль ЛР2)
+TRANSIENT_S = _env("STEP_TRANSIENT_S", 5.0)  # перехідна частина сходинки, не враховується
+MEASURE_S = STEP_S - TRANSIENT_S            # вікно вимірювання сходинки, 15 с
 RATE0 = _env("STEP_RATE0", 200.0)           # перша сходинка
 RATE_STEP = _env("STEP_RATE_STEP", 200.0)   # приріст
 # Прогрів на рівні першої сходинки. У ЛР2 перша сходинка дорівнювала 200 rps, тож поведінка
@@ -39,10 +39,38 @@ WARMUP_RATE = _env("STEP_WARMUP_RATE", RATE0)
 MAX_STEPS = int(_env("STEP_MAX_STEPS", 40))
 START_DELAY = 3.0
 FLUSH_LAG = 0.3         # наскільки пізно закривати секунду, с
-# Крок 6 ЛР3: 8·R зʼєднань на весь генератор (R = 4) і 100 запитів на зʼєднання.
-# Зʼєднання розподіляються між процесами генератора порівну.
-CONNS = int(_env("STEP_CONNS", 32))
-REQ_PER_CONN = int(_env("STEP_REQ_PER_CONN", 100))
+# Набір зʼєднань генератора. За замовчуванням профіль ЛР2: межа фактично не діє,
+# зʼєднання не переробляються. Модель кроку 6 ЛР3 (8·R зʼєднань, по 100 запитів на кожне)
+# вмикають явно через configure() або змінні середовища.
+CONNS = int(_env("STEP_CONNS", 1500))
+REQ_PER_CONN = int(_env("STEP_REQ_PER_CONN", 0))   # 0 — не закривати за кількістю запитів
+
+def configure(step_s=None, transient_s=None, rate0=None, rate_step=None,
+              warmup_s=None, warmup_rate=None, conns=None, req_per_conn=None):
+    """Задає профіль прогону. Викликається оркестратором лабораторної роботи до run().
+
+    Значення дублюються у змінні середовища: робочі процеси генератора на Windows
+    породжуються заново (spawn) і читають їх під час повторного імпорту модуля.
+    """
+    global STEP_S, TRANSIENT_S, MEASURE_S, RATE0, RATE_STEP, WARMUP_S, WARMUP_RATE
+    global CONNS, REQ_PER_CONN
+    pairs = (("STEP_DURATION_S", step_s), ("STEP_TRANSIENT_S", transient_s),
+             ("STEP_RATE0", rate0), ("STEP_RATE_STEP", rate_step),
+             ("STEP_WARMUP_S", warmup_s), ("STEP_WARMUP_RATE", warmup_rate),
+             ("STEP_CONNS", conns), ("STEP_REQ_PER_CONN", req_per_conn))
+    for name, value in pairs:
+        if value is not None:
+            os.environ[name] = str(value)
+    STEP_S = _env("STEP_DURATION_S", STEP_S)
+    TRANSIENT_S = _env("STEP_TRANSIENT_S", TRANSIENT_S)
+    MEASURE_S = STEP_S - TRANSIENT_S
+    RATE0 = _env("STEP_RATE0", RATE0)
+    RATE_STEP = _env("STEP_RATE_STEP", RATE_STEP)
+    WARMUP_S = _env("STEP_WARMUP_S", WARMUP_S)
+    WARMUP_RATE = _env("STEP_WARMUP_RATE", RATE0)
+    CONNS = int(_env("STEP_CONNS", CONNS))
+    REQ_PER_CONN = int(_env("STEP_REQ_PER_CONN", REQ_PER_CONN))
+
 
 CRLF = "\r\n"
 CRLFB = b"\r\n"
@@ -126,7 +154,7 @@ class Connections:
             await asyncio.sleep(0.005)   # усі зʼєднання зайняті: чекаємо вільне
 
     def give(self, reader, writer, used):
-        if used >= self.max_requests:    # вичерпано: закриваємо, наступний запит відкриє нове
+        if self.max_requests and used >= self.max_requests:   # вичерпано: закриваємо
             writer.close()
             self.open -= 1
             self.recycled += 1

@@ -182,6 +182,10 @@ def main():
     ap.add_argument("--no-scale", action="store_true", help="не піднімати стенд заново")
     a = ap.parse_args()
 
+    # профіль ЛР2 (крок 5): сходинка 20 с із середніми за останні 15 с, межа зʼєднань
+    # фактично не діє, зʼєднання не переробляються
+    step.configure(step_s=20, transient_s=5, rate0=200, rate_step=200,
+                   warmup_rate=200, conns=1500, req_per_conn=0)
     base = a.base or step.default_base()
     url = a.prom or prom.default_url()
     name = a.name or f"N{a.instances}"

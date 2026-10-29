@@ -169,11 +169,18 @@ def main():
     ap.add_argument("--name", default=None, help="імʼя файлів; типово N<replicas>")
     ap.add_argument("--procs", type=int, default=None)
     ap.add_argument("--max-steps", type=int, default=step.MAX_STEPS)
+    ap.add_argument("--rate0", type=float, default=50.0,
+                    help="перша сходинка; у кластері дрібніша за ЛР2, бо X(N) менші")
+    ap.add_argument("--rate-step", type=float, default=50.0)
     ap.add_argument("--base", default=None)
     ap.add_argument("--prom", default=None)
     ap.add_argument("--no-scale", action="store_true")
     a = ap.parse_args()
 
+    # профіль ЛР3: сходинка 30 с із середніми за останні 20 с, 8·R = 32 постійних
+    # зʼєднання з закриттям після 100 запитів (крок 6)
+    step.configure(step_s=30, transient_s=10, rate0=a.rate0, rate_step=a.rate_step,
+                   conns=32, req_per_conn=100)
     base = a.base or step.default_base()
     url = a.prom or prom.default_url()
     name = a.name or f"N{a.replicas}"

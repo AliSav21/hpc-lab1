@@ -1,5 +1,10 @@
-"""Ступінчастий відкритий контур: прогрів 10 с на 200 rps, далі сходинки 20 с від 200 rps
-з приростом 200 rps. Посекундний запис і зупинка за правилами кроку 5. Лише стандартна бібліотека.
+"""Ступінчастий відкритий контур: прогрів 10 с на 200 rps, далі сходинки 30 с від 200 rps
+з приростом 200 rps. Посекундний запис і зупинка за правилами кроку 5 ЛР2.
+
+Модель зʼєднань (крок 6 ЛР3): генератор тримає 8·R = 32 постійних зʼєднання і закриває
+кожне після 100 запитів, відкриваючи замість нього нове. Тривалість сходинки 30 с,
+середні значення сходинки беруться за останні 20 с.
+Лише стандартна бібліотека.
 """
 import sys as _sys
 _sys.stdout.reconfigure(encoding="utf-8")  # консоль Windows: cp1252
@@ -11,7 +16,7 @@ import os
 import random
 import statistics
 import time
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -22,16 +27,22 @@ def _env(name, default):
 
 TIMEOUT = _env("STEP_TIMEOUT_S", 5.0)       # таймаут запиту, с; перевищення = відповідь не 2xx
 WARMUP_S = _env("STEP_WARMUP_S", 10.0)      # прогрів
-WARMUP_RATE = _env("STEP_WARMUP_RATE", 200.0)
-STEP_S = _env("STEP_DURATION_S", 20.0)      # тривалість сходинки
-TRANSIENT_S = _env("STEP_TRANSIENT_S", 5.0)  # перехідна частина сходинки, не враховується
-MEASURE_S = STEP_S - TRANSIENT_S            # вікно вимірювання сходинки, 15 с
+STEP_S = _env("STEP_DURATION_S", 30.0)      # тривалість сходинки (крок 6 ЛР3)
+TRANSIENT_S = _env("STEP_TRANSIENT_S", 10.0)  # перехідна частина сходинки, не враховується
+MEASURE_S = STEP_S - TRANSIENT_S            # вікно вимірювання сходинки, 20 с
 RATE0 = _env("STEP_RATE0", 200.0)           # перша сходинка
 RATE_STEP = _env("STEP_RATE_STEP", 200.0)   # приріст
+# Прогрів на рівні першої сходинки. У ЛР2 перша сходинка дорівнювала 200 rps, тож поведінка
+# не змінюється; у кластері сходинки дрібніші, і прогрів на 200 rps насичував одну репліку,
+# а черга його таймаутів переливалась у першу сходинку і псувала її.
+WARMUP_RATE = _env("STEP_WARMUP_RATE", RATE0)
 MAX_STEPS = int(_env("STEP_MAX_STEPS", 40))
 START_DELAY = 3.0
 FLUSH_LAG = 0.3         # наскільки пізно закривати секунду, с
-MAX_CONNS = 1500        # межа відкритих зʼєднань одного процесу генератора
+# Крок 6 ЛР3: 8·R зʼєднань на весь генератор (R = 4) і 100 запитів на зʼєднання.
+# Зʼєднання розподіляються між процесами генератора порівну.
+CONNS = int(_env("STEP_CONNS", 32))
+REQ_PER_CONN = int(_env("STEP_REQ_PER_CONN", 100))
 
 CRLF = "\r\n"
 CRLFB = b"\r\n"
@@ -70,61 +81,98 @@ async def read_response(reader):
 
 
 class Connections:
-    """Пул keep-alive зʼєднань: відкрите зʼєднання повертається після відповіді."""
+    """Фіксований набір keep-alive зʼєднань (крок 6 ЛР3).
 
-    def __init__(self, host, port, limit=MAX_CONNS):
+    Одночасно відкритих зʼєднань не більше limit: поки всі зайняті, запит чекає вільного.
+    Кожне зʼєднання закривається після max_requests запитів, і наступний запит відкриває
+    замість нього нове. Саме через це нові поди взагалі отримують трафік: kube-proxy
+    обирає под під час встановлення TCP-зʼєднання.
+    """
+
+    def __init__(self, host, port, limit=CONNS, max_requests=REQ_PER_CONN):
         self.host, self.port = host, port
-        self.free = []
+        self.free = []            # [reader, writer, скільки запитів уже пройшло]
         self.limit = limit
+        self.max_requests = max_requests
         self.open = 0
+        self.opened_total = 0     # скільки зʼєднань відкрито за прогін
+        self.recycled = 0         # скільки закрито після вичерпання ліміту запитів
 
-    async def take(self):
+    async def take(self, budget):
+        """Вільне зʼєднання або None, якщо за budget секунд жодне не звільнилося.
+
+        Термін відлічується тут, а не через asyncio.wait_for: скасування wait_for могло
+        відкинути вже відкрите зʼєднання, лишивши лічильник open завищеним, і набір
+        поступово ставав меншим за limit.
+        """
+        deadline = time.perf_counter() + budget
         while True:
             while self.free:
-                reader, writer = self.free.pop()
+                reader, writer, used = self.free.pop()
                 if not writer.is_closing():
-                    return reader, writer
+                    return reader, writer, used
                 self.open -= 1
             if self.open < self.limit:
                 self.open += 1
                 try:
-                    return await asyncio.open_connection(self.host, self.port)
-                except Exception:
+                    reader, writer = await asyncio.open_connection(self.host, self.port)
+                except BaseException:     # зокрема скасування: лічильник має лишитися цілим
                     self.open -= 1
                     raise
-            await asyncio.sleep(0.005)   # межа відкритих зʼєднань: чекаємо вільне
+                self.opened_total += 1
+                return reader, writer, 0
+            if time.perf_counter() >= deadline:
+                return None
+            await asyncio.sleep(0.005)   # усі зʼєднання зайняті: чекаємо вільне
 
-    def give(self, reader, writer):
-        self.free.append((reader, writer))
+    def give(self, reader, writer, used):
+        if used >= self.max_requests:    # вичерпано: закриваємо, наступний запит відкриє нове
+            writer.close()
+            self.open -= 1
+            self.recycled += 1
+            return
+        self.free.append((reader, writer, used))
 
     def drop(self):
         self.open -= 1
 
     def close_all(self):
-        for _, writer in self.free:
+        for _, writer, _ in self.free:
             writer.close()
         self.free.clear()
 
 
 async def fetch(conns, host, path, budget):
-    """Один GET у межах budget секунд. Повертає код статусу, STATUS_TIMEOUT або STATUS_CONNERR."""
-    writer = None
+    """Один GET у межах budget секунд разом з очікуванням вільного зʼєднання.
+
+    Повертає код статусу, STATUS_TIMEOUT або STATUS_CONNERR.
+    """
+    started = time.perf_counter()
+    taken = None
     try:
-        reader, writer = await asyncio.wait_for(conns.take(), budget)
+        taken = await conns.take(budget)
+        if taken is None:                 # вільного зʼєднання не дочекались
+            return STATUS_TIMEOUT
+        reader, writer, used = taken
+        left = budget - (time.perf_counter() - started)
+        if left <= 0:                     # бюджет вичерпано очікуванням зʼєднання
+            writer.close()
+            conns.drop()
+            return STATUS_TIMEOUT
         writer.write(f"GET {path} HTTP/1.1{CRLF}Host: {host}{CRLF}{CRLF}".encode())
         await writer.drain()
-        status = await asyncio.wait_for(read_response(reader), budget)
+        status = await asyncio.wait_for(read_response(reader), left)
     except asyncio.TimeoutError:
-        if writer is not None:
-            writer.close()
+        if taken is not None:
+            taken[1].close()
             conns.drop()
         return STATUS_TIMEOUT
     except Exception:
-        if writer is not None:
-            writer.close()
+        if taken is not None:
+            taken[1].close()
             conns.drop()
         return STATUS_CONNERR
-    conns.give(reader, writer)
+    conns.give(reader, writer, used + 1)
     return status
 
 
@@ -148,6 +196,7 @@ class Buckets:
     """Посекундні агрегати одного процесу."""
 
     def __init__(self):
+        self.hist = Counter()        # скільки яких кодів за весь прогін процесу
         self.sent = defaultdict(int)
         self.c2xx = defaultdict(int)
         self.non2xx = defaultdict(int)
@@ -158,6 +207,7 @@ class Buckets:
         self.sent[sec] += 1
 
     def add_done(self, sec, status, latency):
+        self.hist[status] += 1
         self.lat[sec].append(latency)
         if 200 <= status < 300:
             self.c2xx[sec] += 1
@@ -178,10 +228,11 @@ class Buckets:
 
 
 async def worker_main(a, queue, stop):
-    (base, path_t, ids, start_wall, widx, nworkers, seed, max_steps, max_rate) = a
+    (base, path_t, ids, start_wall, widx, nworkers, seed, max_steps, max_rate,
+     conns_share, req_per_conn) = a
     u = urlparse(base)
     host, port = u.hostname, u.port or 80
-    conns = Connections(host, port)
+    conns = Connections(host, port, conns_share, req_per_conn)
     rng = random.Random(seed)
     # perf_counter, а не годинник циклу подій: на Windows time.monotonic має крок 15,6 мс,
     # і розклад зі сном збився б у пачки з таким самим кроком.
@@ -248,6 +299,8 @@ async def worker_main(a, queue, stop):
     flush_task.cancel()
     for row in buckets.drain(10 ** 9):
         queue.put((widx, row))
+    queue.put(("conns", widx, {"limit": conns.limit, "opened": conns.opened_total,
+                               "recycled": conns.recycled, "statuses": dict(buckets.hist)}))
     conns.close_all()
 
 
@@ -283,13 +336,18 @@ class Collector:
     def __init__(self):
         self.rows = defaultdict(lambda: {"sent": 0, "c2xx": 0, "non2xx": 0, "connerr": 0,
                                          "lat": []})
+        self.conns = []           # підсумки зʼєднань від кожного процесу
 
     def absorb(self, queue):
         while True:
             try:
-                _, (sec, sent, c2xx, non2xx, connerr, lat) = queue.get_nowait()
+                msg = queue.get_nowait()
             except Exception:
                 return
+            if msg[0] == "conns":   # підсумок зʼєднань процесу, а не посекундний рядок
+                self.conns.append(msg[2])
+                continue
+            _, (sec, sent, c2xx, non2xx, connerr, lat) = msg
             r = self.rows[sec]
             r["sent"] += sent
             r["c2xx"] += c2xx
@@ -320,13 +378,18 @@ class Collector:
         }
 
 
-def run(base, path_t, ids, out, procs=None, max_rate=None, max_steps=MAX_STEPS, label=None):
+def run(base, path_t, ids, out, procs=None, max_rate=None, max_steps=MAX_STEPS, label=None,
+        conns=CONNS, req_per_conn=REQ_PER_CONN):
     procs = procs or max(1, (os.cpu_count() or 2) // 2)
+    procs = min(procs, conns)            # на процес має припасти хоча б одне зʼєднання
     ctx = mp.get_context("spawn")
     queue = ctx.Queue()
     stop = ctx.Event()
     start_wall = time.time() + START_DELAY + 0.3 * procs
-    args = [(base, path_t, ids, start_wall, k, procs, 5000 + k, max_steps, max_rate)
+    # 8·R зʼєднань на весь генератор, порівну між процесами
+    shares = [conns // procs + (1 if k < conns % procs else 0) for k in range(procs)]
+    args = [(base, path_t, ids, start_wall, k, procs, 5000 + k, max_steps, max_rate,
+             shares[k], req_per_conn)
             for k in range(procs)]
     workers = [ctx.Process(target=worker, args=(a, queue, stop), daemon=True) for a in args]
     for w in workers:
@@ -366,7 +429,14 @@ def run(base, path_t, ids, out, procs=None, max_rate=None, max_steps=MAX_STEPS, 
             w.terminate()
     col.absorb(queue)
 
-    best = max(steps, key=lambda m: m["achieved_rps"]) if steps else None
+    # X(N) береться зі сходинки, яку стенд витримав: досягнуто не менше 0,9 заданої
+    # і частка не-2xx менша за 1 %. Сходинка в насиченні може показати більшу досягнуту
+    # інтенсивність, але з таймаутами, і пропускною здатністю вона не є.
+    held = [m for m in steps
+            if m["achieved_rps"] >= 0.9 * m["target_rps"] and (m["non2xx_share"] or 0) < 0.01]
+    best = max(held, key=lambda m: m["achieved_rps"]) if held else (
+        max(steps, key=lambda m: m["achieved_rps"]) if steps else None)
+    peak = max(steps, key=lambda m: m["achieved_rps"]) if steps else None
     last = steps[-1] if steps else None
     summary = {
         "label": label,
@@ -374,6 +444,11 @@ def run(base, path_t, ids, out, procs=None, max_rate=None, max_steps=MAX_STEPS, 
         "profile": {"warmup_s": WARMUP_S, "warmup_rate": WARMUP_RATE, "step_s": STEP_S,
                     "rate0": RATE0, "rate_step": RATE_STEP, "transient_s": TRANSIENT_S,
                     "timeout_s": TIMEOUT},
+        "connections": {"total": conns, "per_proc": shares, "req_per_conn": req_per_conn,
+                        "opened": sum(c["opened"] for c in col.conns),
+                        "recycled": sum(c["recycled"] for c in col.conns)},
+        # коди відповідей за весь прогін: -1 таймаут, 0 помилка зʼєднання
+        "statuses": dict(sum((Counter(c.get("statuses", {})) for c in col.conns), Counter())),
         "max_rate_G": max_rate,
         "stop_reason": reason,
         "steps": steps,
@@ -385,6 +460,10 @@ def run(base, path_t, ids, out, procs=None, max_rate=None, max_steps=MAX_STEPS, 
         "X_p95_ms": best["p95_ms"] if best else None,
         "X_p99_ms": best["p99_ms"] if best else None,
         "X_non2xx_share": best["non2xx_share"] if best else None,
+        "X_held": bool(held),
+        # найбільша досягнута серед усіх сходинок, зокрема в насиченні
+        "peak_achieved_rps": peak["achieved_rps"] if peak else None,
+        "peak_step": peak["step"] if peak else None,
         # точка вважається обмеженою генератором, якщо остання сходинка тримала задану
         "last_step_held": bool(last and last["achieved_rps"] >= 0.9 * last["target_rps"]),
         "start_wall": start_wall,
@@ -442,9 +521,14 @@ if __name__ == "__main__":
     ap.add_argument("--max-rate", type=float, default=None,
                     help="межа генератора G: прогін завершується після сходинки з такою заданою")
     ap.add_argument("--max-steps", type=int, default=MAX_STEPS)
+    ap.add_argument("--conns", type=int, default=CONNS,
+                    help="постійних зʼєднань на весь генератор (крок 6: 8·R = 32)")
+    ap.add_argument("--req-per-conn", type=int, default=REQ_PER_CONN,
+                    help="після скількох запитів зʼєднання закривається (крок 6: 100)")
     ap.add_argument("--label")
     a = ap.parse_args()
     ids_file = Path(a.ids)
     ids = json.loads(ids_file.read_text()) if ("{id}" in a.path and ids_file.exists()) else []
-    s = run(a.base, a.path, ids, a.out, a.procs, a.max_rate, a.max_steps, a.label)
+    s = run(a.base, a.path, ids, a.out, a.procs, a.max_rate, a.max_steps, a.label,
+            a.conns, a.req_per_conn)
     print(json.dumps({k: v for k, v in s.items() if k != "steps"}, indent=2, ensure_ascii=False))

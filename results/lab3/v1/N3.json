@@ -1,0 +1,1343 @@
+{
+  "label": "Kubernetes, N=3",
+  "base": "http://127.0.0.1:18080",
+  "path": "/donor-registry/{id}",
+  "procs": 4,
+  "profile": {
+    "warmup_s": 10.0,
+    "warmup_rate": 200.0,
+    "step_s": 30.0,
+    "rate0": 50.0,
+    "rate_step": 50.0,
+    "transient_s": 10.0,
+    "timeout_s": 5.0
+  },
+  "connections": {
+    "total": 32,
+    "per_proc": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "req_per_conn": 100,
+    "opened": 1129,
+    "recycled": 1071
+  },
+  "statuses": {
+    "200": 109399,
+    "0": 27,
+    "-1": 10182
+  },
+  "max_rate_G": 700.0,
+  "stop_reason": "two_low_steps",
+  "steps": [
+    {
+      "step": 0,
+      "target_rps": 50.0,
+      "window_s": [
+        20,
+        40
+      ],
+      "achieved_rps": 50.0,
+      "achieved_sd": 0.0,
+      "sent_rps": 50.0,
+      "p50_ms": 6.010308978147805,
+      "p95_ms": 10.877049566712838,
+      "p99_ms": 20.052055628968294,
+      "responses": 1000,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    },
+    {
+      "step": 1,
+      "target_rps": 100.0,
+      "window_s": [
+        50,
+        70
+      ],
+      "achieved_rps": 100.0,
+      "achieved_sd": 0.3244428422615251,
+      "sent_rps": 100.0,
+      "p50_ms": 5.311490916646733,
+      "p95_ms": 11.05091608548747,
+      "p99_ms": 24.066985829453383,
+      "responses": 2000,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    },
+    {
+      "step": 2,
+      "target_rps": 150.0,
+      "window_s": [
+        80,
+        100
+      ],
+      "achieved_rps": 150.0,
+      "achieved_sd": 0.5619514869490164,
+      "sent_rps": 150.0,
+      "p50_ms": 4.857858885081612,
+      "p95_ms": 11.261251173448272,
+      "p99_ms": 27.286011898824608,
+      "responses": 3000,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    },
+    {
+      "step": 3,
+      "target_rps": 200.0,
+      "window_s": [
+        110,
+        130
+      ],
+      "achieved_rps": 200.0,
+      "achieved_sd": 1.6858544608470492,
+      "sent_rps": 200.0,
+      "p50_ms": 4.798270901666513,
+      "p95_ms": 10.15663028508343,
+      "p99_ms": 21.606110582134924,
+      "responses": 4000,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    },
+    {
+      "step": 4,
+      "target_rps": 250.0,
+      "window_s": [
+        140,
+        160
+      ],
+      "achieved_rps": 250.0,
+      "achieved_sd": 5.399805064707624,
+      "sent_rps": 250.0,
+      "p50_ms": 4.987508906978633,
+      "p95_ms": 22.311185841824987,
+      "p99_ms": 63.24523235048103,
+      "responses": 5000,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    },
+    {
+      "step": 5,
+      "target_rps": 300.0,
+      "window_s": [
+        170,
+        190
+      ],
+      "achieved_rps": 299.45,
+      "achieved_sd": 3.979883626968322,
+      "sent_rps": 300.0,
+      "p50_ms": 4.944980549623779,
+      "p95_ms": 21.969921622579136,
+      "p99_ms": 65.74682627567255,
+      "responses": 6000,
+      "non2xx": 11,
+      "non2xx_share": 0.0018333333333333333,
+      "connerr": 11
+    },
+    {
+      "step": 6,
+      "target_rps": 350.0,
+      "window_s": [
+        200,
+        220
+      ],
+      "achieved_rps": 350.0,
+      "achieved_sd": 4.35285750066007,
+      "sent_rps": 350.0,
+      "p50_ms": 4.919154050639918,
+      "p95_ms": 24.04148259333283,
+      "p99_ms": 72.10731117055502,
+      "responses": 7001,
+      "non2xx": 1,
+      "non2xx_share": 0.00014283673760891302,
+      "connerr": 1
+    },
+    {
+      "step": 7,
+      "target_rps": 400.0,
+      "window_s": [
+        230,
+        250
+      ],
+      "achieved_rps": 399.8,
+      "achieved_sd": 10.610818709421556,
+      "sent_rps": 400.0,
+      "p50_ms": 5.16281122341411,
+      "p95_ms": 38.725387305021286,
+      "p99_ms": 112.79224093073026,
+      "responses": 8001,
+      "non2xx": 5,
+      "non2xx_share": 0.0006249218847644045,
+      "connerr": 5
+    },
+    {
+      "step": 8,
+      "target_rps": 450.0,
+      "window_s": [
+        260,
+        280
+      ],
+      "achieved_rps": 449.9,
+      "achieved_sd": 49.93985856692238,
+      "sent_rps": 450.0,
+      "p50_ms": 6.20957591570459,
+      "p95_ms": 237.27535274549868,
+      "p99_ms": 815.451799961947,
+      "responses": 8998,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    },
+    {
+      "step": 9,
+      "target_rps": 500.0,
+      "window_s": [
+        290,
+        310
+      ],
+      "achieved_rps": 456.2,
+      "achieved_sd": 74.35165378828256,
+      "sent_rps": 499.95,
+      "p50_ms": 8.297140862794095,
+      "p95_ms": 1607.1885466661397,
+      "p99_ms": 4986.360516813934,
+      "responses": 9277,
+      "non2xx": 153,
+      "non2xx_share": 0.016492400560526033,
+      "connerr": 0
+    },
+    {
+      "step": 10,
+      "target_rps": 550.0,
+      "window_s": [
+        320,
+        340
+      ],
+      "achieved_rps": 452.35,
+      "achieved_sd": 138.89574848557612,
+      "sent_rps": 550.0,
+      "p50_ms": 167.64638836241375,
+      "p95_ms": 4992.515763157838,
+      "p99_ms": 5004.158992171316,
+      "responses": 10712,
+      "non2xx": 1665,
+      "non2xx_share": 0.15543315907393576,
+      "connerr": 0
+    },
+    {
+      "step": 11,
+      "target_rps": 600.0,
+      "window_s": [
+        350,
+        370
+      ],
+      "achieved_rps": 350.7,
+      "achieved_sd": 74.6698699187578,
+      "sent_rps": 599.95,
+      "p50_ms": 2953.5279304627124,
+      "p95_ms": 5008.189318965492,
+      "p99_ms": 5020.305189261824,
+      "responses": 12311,
+      "non2xx": 5297,
+      "non2xx_share": 0.43026561611566894,
+      "connerr": 0
+    }
+  ],
+  "X": 449.9,
+  "X_sd": 49.93985856692238,
+  "X_step": 8,
+  "X_target_rps": 450.0,
+  "X_p50_ms": 6.20957591570459,
+  "X_p95_ms": 237.27535274549868,
+  "X_p99_ms": 815.451799961947,
+  "X_non2xx_share": 0.0,
+  "X_held": true,
+  "peak_achieved_rps": 456.2,
+  "peak_step": 9,
+  "last_step_held": false,
+  "start_wall": 1793291207.3171864,
+  "started_at": "2026-10-29T18:26:47",
+  "replicas": 3,
+  "pods": [
+    "web-78d98b4785-4l4qp",
+    "web-78d98b4785-cvnts",
+    "web-78d98b4785-nk7f5"
+  ],
+  "pods_by_node": {
+    "hpc-worker": [
+      "web-78d98b4785-4l4qp"
+    ],
+    "hpc-worker2": [
+      "web-78d98b4785-cvnts",
+      "web-78d98b4785-nk7f5"
+    ]
+  },
+  "prom": [
+    {
+      "step": 0,
+      "target_rps": 50.0,
+      "window_unix": [
+        1793291227.3171864,
+        1793291247.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 19.400000000000002,
+        "web-78d98b4785-cvnts": 12.532497833477768,
+        "web-78d98b4785-nk7f5": 20.26957
+      },
+      "rps_server_total": 52.20206783347777,
+      "imbalance_I": 1.1648716712521243,
+      "rps_per_node": {
+        "hpc-worker": 19.400000000000002,
+        "hpc-worker2": 32.80206783347777
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.0,
+        "web-78d98b4785-cvnts": 0.0,
+        "web-78d98b4785-nk7f5": 0.0
+      },
+      "throttle_avg": 0.0,
+      "throttle_max": 0.0,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.05694918104253789,
+        "web-78d98b4785-cvnts": 0.05802367488502005,
+        "web-78d98b4785-nk7f5": 0.05836411392405061
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 1001.0,
+        "rank": 990.99,
+        "value_s": 0.00610555555555556,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 984.0,
+        "rank": 974.16,
+        "value_s": 0.00495,
+        "bucket": [
+          0.0,
+          0.005
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 0.08333333333333333,
+      "pool_busy_max": 1.0,
+      "in_flight_per_pod": 1.0833333333333333,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-nk7f5",
+      "idlest_pod": "web-78d98b4785-cvnts",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 396.0,
+        "rank": 392.04,
+        "value_s": 0.0049751269035533,
+        "bucket": [
+          0.0,
+          0.005
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.0,
+      "busiest_rps": 20.26957,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 252.0,
+        "rank": 249.48,
+        "value_s": 0.006199999999999975,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "idlest_throttle": 0.0,
+      "idlest_rps": 12.532497833477768
+    },
+    {
+      "step": 1,
+      "target_rps": 100.0,
+      "window_unix": [
+        1793291257.3171864,
+        1793291277.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 50.86666666666667,
+        "web-78d98b4785-cvnts": 22.66515565628958,
+        "web-78d98b4785-nk7f5": 34.597693487100855
+      },
+      "rps_server_total": 108.1295158100571,
+      "imbalance_I": 1.4112705384537263,
+      "rps_per_node": {
+        "hpc-worker": 50.86666666666667,
+        "hpc-worker2": 57.26284914339044
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.0,
+        "web-78d98b4785-cvnts": 0.0,
+        "web-78d98b4785-nk7f5": 0.0
+      },
+      "throttle_avg": 0.0,
+      "throttle_max": 0.0,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.1176183774412303,
+        "web-78d98b4785-cvnts": 0.09297992620849202,
+        "web-78d98b4785-nk7f5": 0.08132835071202534
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 2042.0,
+        "rank": 2021.58,
+        "value_s": 0.007879411764705871,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 2023.0,
+        "rank": 2002.77,
+        "value_s": 0.004952448071216617,
+        "bucket": [
+          0.0,
+          0.005
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 0.0,
+      "pool_busy_max": 0.0,
+      "in_flight_per_pod": 1.0833333333333333,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-4l4qp",
+      "idlest_pod": "web-78d98b4785-cvnts",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 806.0,
+        "rank": 797.9399999999999,
+        "value_s": 0.008106249999999982,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.0,
+      "busiest_rps": 50.86666666666667,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 536.0,
+        "rank": 530.64,
+        "value_s": 0.006366666666666655,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "idlest_throttle": 0.0,
+      "idlest_rps": 22.66515565628958
+    },
+    {
+      "step": 2,
+      "target_rps": 150.0,
+      "window_unix": [
+        1793291287.3171864,
+        1793291307.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 35.00233348889926,
+        "web-78d98b4785-cvnts": 38.46666666666667,
+        "web-78d98b4785-nk7f5": 73.8715914394293
+      },
+      "rps_server_total": 147.34059159499523,
+      "imbalance_I": 1.5040985781260807,
+      "rps_per_node": {
+        "hpc-worker": 35.00233348889926,
+        "hpc-worker2": 112.33825810609596
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.0,
+        "web-78d98b4785-cvnts": 0.0,
+        "web-78d98b4785-nk7f5": 0.0
+      },
+      "throttle_avg": 0.0,
+      "throttle_max": 0.0,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.055030353754733044,
+        "web-78d98b4785-cvnts": 0.13067142487493438,
+        "web-78d98b4785-nk7f5": 0.15053393009938792
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 2918.0,
+        "rank": 2888.82,
+        "value_s": 0.008805882352941193,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 2900.0,
+        "rank": 2871.0,
+        "value_s": 0.00495,
+        "bucket": [
+          0.0,
+          0.005
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 0.08333333333333333,
+      "pool_busy_max": 1.0,
+      "in_flight_per_pod": 1.1666666666666667,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-nk7f5",
+      "idlest_pod": "web-78d98b4785-4l4qp",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 1314.0,
+        "rank": 1300.86,
+        "value_s": 0.008964999999999975,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.0,
+      "busiest_rps": 73.8715914394293,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 710.0,
+        "rank": 702.9,
+        "value_s": 0.007071428571428555,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "idlest_throttle": 0.0,
+      "idlest_rps": 35.00233348889926
+    },
+    {
+      "step": 3,
+      "target_rps": 200.0,
+      "window_unix": [
+        1793291317.3171864,
+        1793291337.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 62.199999999999996,
+        "web-78d98b4785-cvnts": 90.73938262550837,
+        "web-78d98b4785-nk7f5": 55.666666666666664
+      },
+      "rps_server_total": 208.60604929217504,
+      "imbalance_I": 1.3049388970271638,
+      "rps_per_node": {
+        "hpc-worker": 62.199999999999996,
+        "hpc-worker2": 146.40604929217503
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.0,
+        "web-78d98b4785-cvnts": 0.0,
+        "web-78d98b4785-nk7f5": 0.0
+      },
+      "throttle_avg": 0.0,
+      "throttle_max": 0.0,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.17393569380956336,
+        "web-78d98b4785-cvnts": 0.2151893192624388,
+        "web-78d98b4785-nk7f5": 0.10391998215215284
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 4023.0,
+        "rank": 3982.77,
+        "value_s": 0.009423148148148146,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 4005.0,
+        "rank": 3964.95,
+        "value_s": 0.0049499999999999995,
+        "bucket": [
+          0.0,
+          0.005
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 0.0,
+      "pool_busy_max": 0.0,
+      "in_flight_per_pod": 1.0,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-cvnts",
+      "idlest_pod": "web-78d98b4785-nk7f5",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 1480.0,
+        "rank": 1465.2,
+        "value_s": 0.009095238095238106,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.0,
+      "busiest_rps": 90.73938262550837,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 945.0,
+        "rank": 935.55,
+        "value_s": 0.009442307692307675,
+        "bucket": [
+          0.005,
+          0.01
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "idlest_throttle": 0.0,
+      "idlest_rps": 55.666666666666664
+    },
+    {
+      "step": 4,
+      "target_rps": 250.0,
+      "window_unix": [
+        1793291347.3171864,
+        1793291367.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 59.45285037444598,
+        "web-78d98b4785-cvnts": 68.12879141390573,
+        "web-78d98b4785-nk7f5": 104.25971601893207
+      },
+      "rps_server_total": 231.84135780728377,
+      "imbalance_I": 1.3491085068471316,
+      "rps_per_node": {
+        "hpc-worker": 59.45285037444598,
+        "hpc-worker2": 172.3885074328378
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.0,
+        "web-78d98b4785-nk7f5": 0.0
+      },
+      "throttle_avg": 0.0,
+      "throttle_max": 0.0,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.1464961037483662,
+        "web-78d98b4785-nk7f5": 0.2874346695420525
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 5038.0,
+        "rank": 4987.62,
+        "value_s": 0.019487878787878773,
+        "bucket": [
+          0.01,
+          0.025
+        ],
+        "max_error_s": 0.015000000000000001,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 5019.0,
+        "rank": 4968.81,
+        "value_s": 0.004950986448784377,
+        "bucket": [
+          0.0,
+          0.005
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 0.0,
+      "pool_busy_max": 0.0,
+      "in_flight_per_pod": 1.25,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-nk7f5",
+      "idlest_pod": "web-78d98b4785-4l4qp",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 2048.0,
+        "rank": 2027.52,
+        "value_s": 0.014924137931034474,
+        "bucket": [
+          0.01,
+          0.025
+        ],
+        "max_error_s": 0.015000000000000001,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.0,
+      "busiest_rps": 104.25971601893207,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 1792.0,
+        "rank": 1774.08,
+        "value_s": 0.014233333333333273,
+        "bucket": [
+          0.01,
+          0.025
+        ],
+        "max_error_s": 0.015000000000000001,
+        "beyond_last": false
+      },
+      "idlest_throttle": 0.0,
+      "idlest_rps": 59.45285037444598
+    },
+    {
+      "step": 5,
+      "target_rps": 300.0,
+      "window_unix": [
+        1793291377.3171864,
+        1793291397.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 104.53581446261204,
+        "web-78d98b4785-cvnts": 78.2,
+        "web-78d98b4785-nk7f5": 113.66666666666669
+      },
+      "rps_server_total": 296.4024811292787,
+      "imbalance_I": 1.150462704295885,
+      "rps_per_node": {
+        "hpc-worker": 104.53581446261204,
+        "hpc-worker2": 191.86666666666667
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-cvnts": 0.0,
+        "web-78d98b4785-nk7f5": 0.0
+      },
+      "throttle_avg": 0.0,
+      "throttle_max": 0.0,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-cvnts": 0.2651672849250194,
+        "web-78d98b4785-nk7f5": 0.20674833353515434
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 5865.0,
+        "rank": 5806.35,
+        "value_s": 0.024137218045112825,
+        "bucket": [
+          0.01,
+          0.025
+        ],
+        "max_error_s": 0.015000000000000001,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 5847.0,
+        "rank": 5788.53,
+        "value_s": 0.00495,
+        "bucket": [
+          0.0,
+          0.005
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 0.16666666666666666,
+      "pool_busy_max": 1.0,
+      "in_flight_per_pod": 1.25,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-nk7f5",
+      "idlest_pod": "web-78d98b4785-cvnts",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 2079.0,
+        "rank": 2058.21,
+        "value_s": 0.020503260869565228,
+        "bucket": [
+          0.01,
+          0.025
+        ],
+        "max_error_s": 0.015000000000000001,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.0,
+      "busiest_rps": 113.66666666666669,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 1622.0,
+        "rank": 1605.78,
+        "value_s": 0.03846969696969695,
+        "bucket": [
+          0.025,
+          0.05
+        ],
+        "max_error_s": 0.025,
+        "beyond_last": false
+      },
+      "idlest_throttle": 0.0,
+      "idlest_rps": 78.2
+    },
+    {
+      "step": 6,
+      "target_rps": 350.0,
+      "window_unix": [
+        1793291407.3171864,
+        1793291427.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 133.53399917909428,
+        "web-78d98b4785-cvnts": 131.00345296641203,
+        "web-78d98b4785-nk7f5": 82.66115592293846
+      },
+      "rps_server_total": 347.19860806844474,
+      "imbalance_I": 1.1538122222492047,
+      "rps_per_node": {
+        "hpc-worker": 133.53399917909428,
+        "hpc-worker2": 213.6646088893505
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.0,
+        "web-78d98b4785-cvnts": 0.007142857142857143,
+        "web-78d98b4785-nk7f5": 0.0
+      },
+      "throttle_avg": 0.0023809523809523807,
+      "throttle_max": 0.007142857142857143,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.2840819381024889,
+        "web-78d98b4785-cvnts": 0.27462991897826383,
+        "web-78d98b4785-nk7f5": 0.270714512582458
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 7421.0,
+        "rank": 7346.79,
+        "value_s": 0.023586337209302324,
+        "bucket": [
+          0.01,
+          0.025
+        ],
+        "max_error_s": 0.015000000000000001,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 7404.0,
+        "rank": 7329.96,
+        "value_s": 0.004950668647845468,
+        "bucket": [
+          0.0,
+          0.005
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 0.08333333333333333,
+      "pool_busy_max": 1.0,
+      "in_flight_per_pod": 1.3333333333333333,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-4l4qp",
+      "idlest_pod": "web-78d98b4785-nk7f5",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 2341.0,
+        "rank": 2317.59,
+        "value_s": 0.024635344827586246,
+        "bucket": [
+          0.01,
+          0.025
+        ],
+        "max_error_s": 0.015000000000000001,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.0,
+      "busiest_rps": 133.53399917909428,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 1921.0,
+        "rank": 1901.79,
+        "value_s": 0.013123913043478238,
+        "bucket": [
+          0.01,
+          0.025
+        ],
+        "max_error_s": 0.015000000000000001,
+        "beyond_last": false
+      },
+      "idlest_throttle": 0.0,
+      "idlest_rps": 82.66115592293846
+    },
+    {
+      "step": 7,
+      "target_rps": 400.0,
+      "window_unix": [
+        1793291437.3171864,
+        1793291457.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 151.0324080404759,
+        "web-78d98b4785-cvnts": 131.5677666052967,
+        "web-78d98b4785-nk7f5": 134.2
+      },
+      "rps_server_total": 416.8001746457726,
+      "imbalance_I": 1.0870850150350897,
+      "rps_per_node": {
+        "hpc-worker": 151.0324080404759,
+        "hpc-worker2": 265.7677666052967
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.0,
+        "web-78d98b4785-nk7f5": 0.0
+      },
+      "throttle_avg": 0.0,
+      "throttle_max": 0.0,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.289681825238702,
+        "web-78d98b4785-nk7f5": 0.4630800140498769
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 7936.0,
+        "rank": 7856.64,
+        "value_s": 0.048805194805194865,
+        "bucket": [
+          0.025,
+          0.05
+        ],
+        "max_error_s": 0.025,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 7918.0,
+        "rank": 7838.82,
+        "value_s": 0.004954379977246871,
+        "bucket": [
+          0.0,
+          0.005
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 0.75,
+      "pool_busy_max": 5.0,
+      "in_flight_per_pod": 2.0833333333333335,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-4l4qp",
+      "idlest_pod": "web-78d98b4785-cvnts",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 2658.0,
+        "rank": 2631.42,
+        "value_s": 0.050875000000000156,
+        "bucket": [
+          0.05,
+          0.1
+        ],
+        "max_error_s": 0.05,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.0,
+      "busiest_rps": 151.0324080404759,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 2295.0,
+        "rank": 2272.05,
+        "value_s": 0.07201219512195145,
+        "bucket": [
+          0.05,
+          0.1
+        ],
+        "max_error_s": 0.05,
+        "beyond_last": false
+      },
+      "idlest_throttle": null,
+      "idlest_rps": 131.5677666052967
+    },
+    {
+      "step": 8,
+      "target_rps": 450.0,
+      "window_unix": [
+        1793291467.3171864,
+        1793291487.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 108.05084745762711,
+        "web-78d98b4785-cvnts": 177.62831858407077,
+        "web-78d98b4785-nk7f5": 160.93333333333334
+      },
+      "rps_server_total": 446.61249937503123,
+      "imbalance_I": 1.1931707162202283,
+      "rps_per_node": {
+        "hpc-worker": 108.05084745762711,
+        "hpc-worker2": 338.5616519174041
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.010752688172043012,
+        "web-78d98b4785-cvnts": 0.010204081632653062,
+        "web-78d98b4785-nk7f5": 0.01872651515151515
+      },
+      "throttle_avg": 0.013227761652070407,
+      "throttle_max": 0.01872651515151515,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.41227905501823575,
+        "web-78d98b4785-cvnts": 0.502251876156236,
+        "web-78d98b4785-nk7f5": 0.5207832626519652
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 8730.0,
+        "rank": 8642.7,
+        "value_s": 0.09442216981132084,
+        "bucket": [
+          0.05,
+          0.1
+        ],
+        "max_error_s": 0.05,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 8713.0,
+        "rank": 8625.87,
+        "value_s": 0.004997028154327425,
+        "bucket": [
+          0.0,
+          0.005
+        ],
+        "max_error_s": 0.005,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 1.3333333333333333,
+      "pool_busy_max": 10.0,
+      "in_flight_per_pod": 2.6666666666666665,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-cvnts",
+      "idlest_pod": "web-78d98b4785-4l4qp",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 3154.0,
+        "rank": 3122.46,
+        "value_s": 0.0982132701421801,
+        "bucket": [
+          0.05,
+          0.1
+        ],
+        "max_error_s": 0.05,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.010204081632653062,
+      "busiest_rps": 177.62831858407077,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 2334.0,
+        "rank": 2310.66,
+        "value_s": 0.07060526315789455,
+        "bucket": [
+          0.05,
+          0.1
+        ],
+        "max_error_s": 0.05,
+        "beyond_last": false
+      },
+      "idlest_throttle": 0.010752688172043012,
+      "idlest_rps": 108.05084745762711
+    },
+    {
+      "step": 9,
+      "target_rps": 500.0,
+      "window_unix": [
+        1793291497.3171864,
+        1793291517.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 189.71918632013802,
+        "web-78d98b4785-cvnts": 116.87668129689935,
+        "web-78d98b4785-nk7f5": 155.83328975579144
+      },
+      "rps_server_total": 462.4291573728288,
+      "imbalance_I": 1.2307994638442241,
+      "rps_per_node": {
+        "hpc-worker": 189.71918632013802,
+        "hpc-worker2": 272.7099710526908
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.009615384615384616,
+        "web-78d98b4785-nk7f5": 0.012048192771084336
+      },
+      "throttle_avg": 0.010831788693234475,
+      "throttle_max": 0.012048192771084336,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.5357282797766193,
+        "web-78d98b4785-nk7f5": 0.5321729755346253
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 10410.0,
+        "rank": 10305.9,
+        "value_s": 0.16009259259259226,
+        "bucket": [
+          0.1,
+          0.25
+        ],
+        "max_error_s": 0.15,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 10398.0,
+        "rank": 10294.02,
+        "value_s": 0.019867785234899373,
+        "bucket": [
+          0.01,
+          0.025
+        ],
+        "max_error_s": 0.015000000000000001,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 1.35,
+      "pool_busy_max": 5.0,
+      "in_flight_per_pod": 3.8833333333333333,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-4l4qp",
+      "idlest_pod": "web-78d98b4785-cvnts",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 4085.0,
+        "rank": 4044.15,
+        "value_s": 0.2057800000000001,
+        "bucket": [
+          0.1,
+          0.25
+        ],
+        "max_error_s": 0.15,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.009615384615384616,
+      "busiest_rps": 189.71918632013802,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 2530.0,
+        "rank": 2504.7,
+        "value_s": 0.0902380952380951,
+        "bucket": [
+          0.05,
+          0.1
+        ],
+        "max_error_s": 0.05,
+        "beyond_last": false
+      },
+      "idlest_throttle": null,
+      "idlest_rps": 116.87668129689935
+    },
+    {
+      "step": 10,
+      "target_rps": 550.0,
+      "window_unix": [
+        1793291527.3171864,
+        1793291547.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 172.77486910994767,
+        "web-78d98b4785-cvnts": 115.30829199149541,
+        "web-78d98b4785-nk7f5": 183.04868542271987
+      },
+      "rps_server_total": 471.13184652416294,
+      "imbalance_I": 1.1655889117230278,
+      "rps_per_node": {
+        "hpc-worker": 172.77486910994767,
+        "hpc-worker2": 298.3569774142153
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.05,
+        "web-78d98b4785-cvnts": 0.006993006993006994,
+        "web-78d98b4785-nk7f5": 0.025210084033613446
+      },
+      "throttle_avg": 0.027401030342206815,
+      "throttle_max": 0.05,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.7960667075345528,
+        "web-78d98b4785-cvnts": 0.6313271362424592,
+        "web-78d98b4785-nk7f5": 0.6698510822213206
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 8869.0,
+        "rank": 8780.31,
+        "value_s": 0.21158152173913017,
+        "bucket": [
+          0.1,
+          0.25
+        ],
+        "max_error_s": 0.15,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 8853.0,
+        "rank": 8764.47,
+        "value_s": 0.024114808917197424,
+        "bucket": [
+          0.01,
+          0.025
+        ],
+        "max_error_s": 0.015000000000000001,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 3.1666666666666665,
+      "pool_busy_max": 8.0,
+      "in_flight_per_pod": 8.5,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-nk7f5",
+      "idlest_pod": "web-78d98b4785-cvnts",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 3395.0,
+        "rank": 3361.05,
+        "value_s": 0.23317187500000017,
+        "bucket": [
+          0.1,
+          0.25
+        ],
+        "max_error_s": 0.15,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.025210084033613446,
+      "busiest_rps": 183.04868542271987,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 2291.0,
+        "rank": 2268.09,
+        "value_s": 0.12272222222222304,
+        "bucket": [
+          0.1,
+          0.25
+        ],
+        "max_error_s": 0.15,
+        "beyond_last": false
+      },
+      "idlest_throttle": 0.006993006993006994,
+      "idlest_rps": 115.30829199149541
+    },
+    {
+      "step": 11,
+      "target_rps": 600.0,
+      "window_unix": [
+        1793291557.3171864,
+        1793291577.3171864
+      ],
+      "rps_per_pod": {
+        "web-78d98b4785-4l4qp": 125.5402054551895,
+        "web-78d98b4785-cvnts": 132.43013193360758,
+        "web-78d98b4785-nk7f5": 108.93122742403852
+      },
+      "rps_server_total": 366.9015648128356,
+      "imbalance_I": 1.082825569314454,
+      "rps_per_node": {
+        "hpc-worker": 125.5402054551895,
+        "hpc-worker2": 241.3613593576461
+      },
+      "throttle_per_pod": {
+        "web-78d98b4785-4l4qp": 0.012422360248447204,
+        "web-78d98b4785-cvnts": 0.019801980198019802,
+        "web-78d98b4785-nk7f5": 0.06722689075630252
+      },
+      "throttle_avg": 0.033150410400923175,
+      "throttle_max": 0.06722689075630252,
+      "cpu_cores_per_pod": {
+        "web-78d98b4785-4l4qp": 0.6056925467769022,
+        "web-78d98b4785-cvnts": 0.46376121291625355,
+        "web-78d98b4785-nk7f5": 0.7287086488305564
+      },
+      "server_p99": {
+        "q": 0.99,
+        "n": 6663.0,
+        "rank": 6596.37,
+        "value_s": 0.2299669703872437,
+        "bucket": [
+          0.1,
+          0.25
+        ],
+        "max_error_s": 0.15,
+        "beyond_last": false
+      },
+      "pool_wait_p99": {
+        "q": 0.99,
+        "n": 6636.0,
+        "rank": 6569.64,
+        "value_s": 0.027350000000000138,
+        "bucket": [
+          0.025,
+          0.05
+        ],
+        "max_error_s": 0.025,
+        "beyond_last": false
+      },
+      "pool_busy_per_pod": 2.4166666666666665,
+      "pool_busy_max": 10.0,
+      "in_flight_per_pod": 5.0,
+      "replicas_ready": 3.0,
+      "busiest_pod": "web-78d98b4785-cvnts",
+      "idlest_pod": "web-78d98b4785-nk7f5",
+      "busiest_p99": {
+        "q": 0.99,
+        "n": 2396.0,
+        "rank": 2372.04,
+        "value_s": 0.23810041841004181,
+        "bucket": [
+          0.1,
+          0.25
+        ],
+        "max_error_s": 0.15,
+        "beyond_last": false
+      },
+      "busiest_throttle": 0.019801980198019802,
+      "busiest_rps": 132.43013193360758,
+      "idlest_p99": {
+        "q": 0.99,
+        "n": 2103.0,
+        "rank": 2081.97,
+        "value_s": 0.22476399999999974,
+        "bucket": [
+          0.1,
+          0.25
+        ],
+        "max_error_s": 0.15,
+        "beyond_last": false
+      },
+      "idlest_throttle": 0.06722689075630252,
+      "idlest_rps": 108.93122742403852
+    }
+  ]
+}

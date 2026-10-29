@@ -1,0 +1,81 @@
+{
+  "label": "перевірка профілю",
+  "base": "http://127.0.0.1:18080",
+  "path": "/donor-registry/{id}",
+  "procs": 4,
+  "segments": [
+    {
+      "duration_s": 20.0,
+      "target_rps": 100.0
+    },
+    {
+      "duration_s": 40.0,
+      "target_rps": 400.0
+    },
+    {
+      "duration_s": 20.0,
+      "target_rps": 100.0
+    }
+  ],
+  "connections": {
+    "total": 32,
+    "per_proc": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "req_per_conn": 100,
+    "opened": 200,
+    "recycled": 164
+  },
+  "timeout_s": 5.0,
+  "segment_stats": [
+    {
+      "segment": 0,
+      "window_s": [
+        0.0,
+        20.0
+      ],
+      "target_rps": 100.0,
+      "achieved_rps": 99.6,
+      "achieved_sd": 2.756809750418044,
+      "p99_ms_mean": 36.86429485869603,
+      "p99_ms_max": 122.77724191062251,
+      "non2xx": 4,
+      "non2xx_share": 0.004
+    },
+    {
+      "segment": 1,
+      "window_s": [
+        20.0,
+        60.0
+      ],
+      "target_rps": 400.0,
+      "achieved_rps": 306.7,
+      "achieved_sd": 77.24531009086884,
+      "p99_ms_mean": 4983.9983071889565,
+      "p99_ms_max": 5075.911870694346,
+      "non2xx": 2400,
+      "non2xx_share": 0.20687871735195243
+    },
+    {
+      "segment": 2,
+      "window_s": [
+        60.0,
+        80.0
+      ],
+      "target_rps": 100.0,
+      "achieved_rps": 99.8,
+      "achieved_sd": 0.9189365834726815,
+      "p99_ms_mean": 34.12835249822692,
+      "p99_ms_max": 75.85800075904103,
+      "non2xx": 0,
+      "non2xx_share": 0.0
+    }
+  ],
+  "non2xx_total": 2598,
+  "connerr_total": 28,
+  "start_wall": 1793288073.8909998,
+  "started_at": "2026-10-29T17:34:33"
+}

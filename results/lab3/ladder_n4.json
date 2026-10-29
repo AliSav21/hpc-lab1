@@ -1,0 +1,114 @@
+{
+  "label": "перевірка кроку 6, N=4",
+  "base": "http://127.0.0.1:18080",
+  "path": "/donor-registry/{id}",
+  "procs": 4,
+  "profile": {
+    "warmup_s": 10.0,
+    "warmup_rate": 200.0,
+    "step_s": 30.0,
+    "rate0": 200.0,
+    "rate_step": 200.0,
+    "transient_s": 10.0,
+    "timeout_s": 5.0
+  },
+  "connections": {
+    "total": 32,
+    "per_proc": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "req_per_conn": 100,
+    "opened": 461,
+    "recycled": 404
+  },
+  "max_rate_G": null,
+  "stop_reason": "two_low_steps",
+  "steps": [
+    {
+      "step": 0,
+      "target_rps": 200.0,
+      "window_s": [
+        20,
+        40
+      ],
+      "achieved_rps": 199.45,
+      "achieved_sd": 3.03445130737702,
+      "sent_rps": 200.0,
+      "p50_ms": 5.507178716356975,
+      "p95_ms": 36.56915155239062,
+      "p99_ms": 70.66122681777769,
+      "responses": 3999,
+      "non2xx": 10,
+      "non2xx_share": 0.002500625156289072,
+      "connerr": 10
+    },
+    {
+      "step": 1,
+      "target_rps": 400.0,
+      "window_s": [
+        50,
+        70
+      ],
+      "achieved_rps": 366.4,
+      "achieved_sd": 54.81202326804624,
+      "sent_rps": 400.05,
+      "p50_ms": 174.0130299516025,
+      "p95_ms": 4985.625455225351,
+      "p99_ms": 5001.977216326913,
+      "responses": 7940,
+      "non2xx": 612,
+      "non2xx_share": 0.07707808564231738,
+      "connerr": 0
+    },
+    {
+      "step": 2,
+      "target_rps": 600.0,
+      "window_s": [
+        80,
+        100
+      ],
+      "achieved_rps": 346.85,
+      "achieved_sd": 115.68754425060997,
+      "sent_rps": 600.05,
+      "p50_ms": 2985.2078156390503,
+      "p95_ms": 5016.478704837615,
+      "p99_ms": 5033.484583678195,
+      "responses": 11992,
+      "non2xx": 5055,
+      "non2xx_share": 0.4215310206804536,
+      "connerr": 0
+    },
+    {
+      "step": 3,
+      "target_rps": 800.0,
+      "window_s": [
+        110,
+        130
+      ],
+      "achieved_rps": 326.6,
+      "achieved_sd": 67.70944115153094,
+      "sent_rps": 799.8,
+      "p50_ms": 5007.079533478247,
+      "p95_ms": 5062.525028913751,
+      "p99_ms": 5116.994346852692,
+      "responses": 16062,
+      "non2xx": 9530,
+      "non2xx_share": 0.5933258622836508,
+      "connerr": 0
+    }
+  ],
+  "X": 366.4,
+  "X_sd": 54.81202326804624,
+  "X_step": 1,
+  "X_target_rps": 400.0,
+  "X_p50_ms": 174.0130299516025,
+  "X_p95_ms": 4985.625455225351,
+  "X_p99_ms": 5001.977216326913,
+  "X_non2xx_share": 0.07707808564231738,
+  "last_step_held": false,
+  "start_wall": 1793288227.9299672,
+  "started_at": "2026-10-29T17:37:07"
+}

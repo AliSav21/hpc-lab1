@@ -1,0 +1,38 @@
+{
+  "label": null,
+  "base": "http://127.0.0.1:18080",
+  "path": "C:/Program Files/Git/livez",
+  "procs": 1,
+  "profile": {
+    "warmup_s": 10.0,
+    "warmup_rate": 200.0,
+    "step_s": 30.0,
+    "rate0": 200.0,
+    "rate_step": 200.0,
+    "transient_s": 10.0,
+    "timeout_s": 5.0
+  },
+  "connections": {
+    "total": 32,
+    "per_proc": [
+      32
+    ],
+    "req_per_conn": 100,
+    "opened": 0,
+    "recycled": 0
+  },
+  "max_rate_G": null,
+  "stop_reason": "max_steps",
+  "steps": [],
+  "X": null,
+  "X_sd": null,
+  "X_step": null,
+  "X_target_rps": null,
+  "X_p50_ms": null,
+  "X_p95_ms": null,
+  "X_p99_ms": null,
+  "X_non2xx_share": null,
+  "last_step_held": false,
+  "start_wall": 1793288915.532186,
+  "started_at": "2026-10-29T17:48:35"
+}

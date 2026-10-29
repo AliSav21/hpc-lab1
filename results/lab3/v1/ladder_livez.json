@@ -1,0 +1,137 @@
+{
+  "label": "межа шляху /livez",
+  "base": "http://127.0.0.1:18080",
+  "path": "/livez",
+  "procs": 4,
+  "profile": {
+    "warmup_s": 10.0,
+    "warmup_rate": 200.0,
+    "step_s": 30.0,
+    "rate0": 200.0,
+    "rate_step": 200.0,
+    "transient_s": 10.0,
+    "timeout_s": 5.0
+  },
+  "connections": {
+    "total": 32,
+    "per_proc": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "req_per_conn": 100,
+    "opened": 829,
+    "recycled": 784
+  },
+  "statuses": {
+    "200": 80175,
+    "0": 13,
+    "-1": 12946
+  },
+  "max_rate_G": null,
+  "stop_reason": "two_low_steps",
+  "steps": [
+    {
+      "step": 0,
+      "target_rps": 200.0,
+      "window_s": [
+        20,
+        40
+      ],
+      "achieved_rps": 199.75,
+      "achieved_sd": 0.9665456669582609,
+      "sent_rps": 200.0,
+      "p50_ms": 2.666128324344541,
+      "p95_ms": 12.639229563065165,
+      "p99_ms": 97.14599310308752,
+      "responses": 4000,
+      "non2xx": 5,
+      "non2xx_share": 0.00125,
+      "connerr": 5
+    },
+    {
+      "step": 1,
+      "target_rps": 400.0,
+      "window_s": [
+        50,
+        70
+      ],
+      "achieved_rps": 400.0,
+      "achieved_sd": 3.0262013708347477,
+      "sent_rps": 400.0,
+      "p50_ms": 2.6974087627635868,
+      "p95_ms": 23.79165378631642,
+      "p99_ms": 293.46061592399644,
+      "responses": 8000,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    },
+    {
+      "step": 2,
+      "target_rps": 600.0,
+      "window_s": [
+        80,
+        100
+      ],
+      "achieved_rps": 586.05,
+      "achieved_sd": 94.41090202435645,
+      "sent_rps": 599.7,
+      "p50_ms": 3.2181252694414297,
+      "p95_ms": 272.74177829113455,
+      "p99_ms": 680.4154786225427,
+      "responses": 11721,
+      "non2xx": 0,
+      "non2xx_share": 0.0,
+      "connerr": 0
+    },
+    {
+      "step": 3,
+      "target_rps": 800.0,
+      "window_s": [
+        110,
+        130
+      ],
+      "achieved_rps": 610.2,
+      "achieved_sd": 147.27475218644554,
+      "sent_rps": 799.55,
+      "p50_ms": 410.5423450004366,
+      "p95_ms": 5007.663197790274,
+      "p99_ms": 5028.766496691297,
+      "responses": 14367,
+      "non2xx": 2163,
+      "non2xx_share": 0.15055335143036125,
+      "connerr": 0
+    },
+    {
+      "step": 4,
+      "target_rps": 1000.0,
+      "window_s": [
+        140,
+        160
+      ],
+      "achieved_rps": 707.6,
+      "achieved_sd": 209.41633174134247,
+      "sent_rps": 1000.0,
+      "p50_ms": 1916.6112782964433,
+      "p95_ms": 5031.364912281738,
+      "p99_ms": 5050.2138620794685,
+      "responses": 21656,
+      "non2xx": 7504,
+      "non2xx_share": 0.34650905060953086,
+      "connerr": 0
+    }
+  ],
+  "X": 707.6,
+  "X_sd": 209.41633174134247,
+  "X_step": 4,
+  "X_target_rps": 1000.0,
+  "X_p50_ms": 1916.6112782964433,
+  "X_p95_ms": 5031.364912281738,
+  "X_p99_ms": 5050.2138620794685,
+  "X_non2xx_share": 0.34650905060953086,
+  "last_step_held": false,
+  "start_wall": 1793289136.765963,
+  "started_at": "2026-10-29T17:52:16"
+}

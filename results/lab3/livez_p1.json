@@ -1,0 +1,57 @@
+{
+  "label": null,
+  "base": "http://127.0.0.1:18080",
+  "path": "C:/Program Files/Git/livez",
+  "procs": 1,
+  "profile": {
+    "warmup_s": 10.0,
+    "warmup_rate": 200.0,
+    "step_s": 30.0,
+    "rate0": 200.0,
+    "rate_step": 200.0,
+    "transient_s": 10.0,
+    "timeout_s": 5.0
+  },
+  "connections": {
+    "total": 32,
+    "per_proc": [
+      32
+    ],
+    "req_per_conn": 100,
+    "opened": 4000,
+    "recycled": 0
+  },
+  "max_rate_G": null,
+  "stop_reason": "max_steps",
+  "steps": [
+    {
+      "step": 0,
+      "target_rps": 200.0,
+      "window_s": [
+        20,
+        40
+      ],
+      "achieved_rps": 0.0,
+      "achieved_sd": 0.0,
+      "sent_rps": 200.0,
+      "p50_ms": 1.9919757544997196,
+      "p95_ms": 8.17989562358861,
+      "p99_ms": 58.47609955333153,
+      "responses": 4003,
+      "non2xx": 4003,
+      "non2xx_share": 1.0,
+      "connerr": 2002
+    }
+  ],
+  "X": 0.0,
+  "X_sd": 0.0,
+  "X_step": 0,
+  "X_target_rps": 200.0,
+  "X_p50_ms": 1.9919757544997196,
+  "X_p95_ms": 8.17989562358861,
+  "X_p99_ms": 58.47609955333153,
+  "X_non2xx_share": 1.0,
+  "last_step_held": false,
+  "start_wall": 1793288662.9913564,
+  "started_at": "2026-10-29T17:44:22"
+}

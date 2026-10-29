@@ -1,0 +1,92 @@
+{
+  "label": "fixed, R=4",
+  "base": "http://127.0.0.1:18080",
+  "path": "/donor-registry/{id}",
+  "procs": 4,
+  "segments": [
+    {
+      "duration_s": 30.0,
+      "target_rps": 72.21
+    },
+    {
+      "duration_s": 60.0,
+      "target_rps": 339.39000000000004
+    },
+    {
+      "duration_s": 90.0,
+      "target_rps": 72.21
+    }
+  ],
+  "connections": {
+    "total": 32,
+    "per_proc": [
+      8,
+      8,
+      8,
+      8
+    ],
+    "req_per_conn": 100,
+    "opened": 319,
+    "recycled": 280
+  },
+  "timeout_s": 5.0,
+  "segment_stats": [
+    {
+      "segment": 0,
+      "window_s": [
+        0.0,
+        30.0
+      ],
+      "target_rps": 72.21,
+      "achieved_rps": 72.15,
+      "achieved_sd": 0.6708203932499369,
+      "p99_ms_mean": 12.9154624031335,
+      "p99_ms_max": 34.225423439686736,
+      "non2xx": 1,
+      "non2xx_share": 0.0006925207756232687
+    },
+    {
+      "segment": 1,
+      "window_s": [
+        30.0,
+        90.0
+      ],
+      "target_rps": 339.39000000000004,
+      "achieved_rps": 339.12,
+      "achieved_sd": 2.7894846279906114,
+      "p99_ms_mean": 36.50990268220503,
+      "p99_ms_max": 247.89629330934417,
+      "non2xx": 14,
+      "non2xx_share": 0.0008249852681202121
+    },
+    {
+      "segment": 2,
+      "window_s": [
+        90.0,
+        180.0
+      ],
+      "target_rps": 72.21,
+      "achieved_rps": 72.1875,
+      "achieved_sd": 0.4798140462589041,
+      "p99_ms_mean": 13.28089118489846,
+      "p99_ms_max": 86.30709793052668,
+      "non2xx": 2,
+      "non2xx_share": 0.00034620045006058506
+    }
+  ],
+  "non2xx_total": 35,
+  "connerr_total": 35,
+  "start_wall": 1793298130.1343277,
+  "started_at": "2026-10-29T20:22:10",
+  "mode": "fixed",
+  "replicas_fixed": 4,
+  "x1": 240.7,
+  "xr": 377.1,
+  "spike_rps": 339.39000000000004,
+  "pods_at_start": [
+    "web-66fdc54dcf-6d86m",
+    "web-66fdc54dcf-9cwkf",
+    "web-66fdc54dcf-fnhzz",
+    "web-66fdc54dcf-t55pw"
+  ]
+}
